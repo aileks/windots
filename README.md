@@ -32,10 +32,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 |---|---|
 | komorebi.json | `~\komorebi.json` |
 | whkdrc | `~\.config\whkdrc` |
-| starship.toml | `~\.config\starship.toml` |
 | nushell env.nu | `%APPDATA%\nushell\env.nu` |
 | nushell config.nu | `%APPDATA%\nushell\config.nu` |
 | .wslconfig | `~\.wslconfig` |
-| wsl.conf | `/etc/wsl.conf` (inside Arch) |
+| wsl.conf | `/etc/wsl.conf` (inside WSL) |
 | Windows Terminal | merged into `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` |
 
