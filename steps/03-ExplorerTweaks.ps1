@@ -11,6 +11,7 @@ function Step-ExplorerTweaks {
             "ShowFrequentFiles"             = @{ Value = 0 }
             "TaskbarDa"                     = @{ Value = 0 }
             "TaskbarAl"                     = @{ Value = 0 }
+            "DisabledHotkeys"               = @{ Value = "hjklqmotpxynf1234567"; Type = "String" }
         }
         "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" = @{
             "DisableSearchBoxSuggestions" = @{ Value = 1 }
