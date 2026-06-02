@@ -6,29 +6,13 @@ function Step-KomorebiSetup {
     $komorebiConfig = "$env:USERPROFILE\komorebi.json"
     $whkdConfig = "$env:USERPROFILE\.config\whkdrc"
 
-    Copy-Item "$script:RootDir/configs/komorebi.json" $komorebiConfig -Force
-    Copy-Item "$script:RootDir/configs/komorebi.bar.json" "$env:USERPROFILE\komorebi.bar.json" -Force
+    Copy-Item "$script:RootDir/configs/komorebi/komorebi.json" $komorebiConfig -Force
+    Copy-Item "$script:RootDir/configs/komorebi/komorebi.bar.json" "$env:USERPROFILE\komorebi.bar.json" -Force
     if (-not (Test-Path (Split-Path $whkdConfig -Parent))) {
         New-Item -Path (Split-Path $whkdConfig -Parent) -ItemType Directory -Force | Out-Null
     }
-    Copy-Item "$script:RootDir/configs/whkdrc" $whkdConfig -Force
+    Copy-Item "$script:RootDir/configs/komorebi/whkdrc" $whkdConfig -Force
     Write-Log "  Deployed komorebi.json, komorebi.bar.json and whkdrc" "INFO"
-
-    # Deploy and autostart the game guard (frees `alt` for fullscreen games like FFXIV)
-    $guardDst = "$env:USERPROFILE\.config\komorebi-game-guard.ps1"
-    Copy-Item "$script:RootDir/configs/komorebi-game-guard.ps1" $guardDst -Force
-    $guardLnk = "$([Environment]::GetFolderPath('Startup'))\komorebi-game-guard.lnk"
-    if (-not (Test-Path $guardLnk)) {
-        $pwshPath = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
-        if (-not $pwshPath) { $pwshPath = (Get-Command powershell).Source }
-        $ws = New-Object -ComObject WScript.Shell
-        $sc = $ws.CreateShortcut($guardLnk)
-        $sc.TargetPath = $pwshPath
-        $sc.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$guardDst`""
-        $sc.WindowStyle = 7
-        $sc.Save()
-        Write-Log "  Registered game-guard autostart (frees alt for FFXIV)" "INFO"
-    }
 
     if (-not (Get-Command komorebic -ErrorAction SilentlyContinue)) {
         Write-Log "  komorebic not found, skipping fetch-asc and autostart task" "WARN"
@@ -41,7 +25,7 @@ function Step-KomorebiSetup {
     komorebic enable-autostart --whkd --bar 2>&1 | Write-Host
     Write-Log "  Enabled autostart (komorebi.lnk in shell:startup, starts komorebi + whkd + bar)" "INFO"
 
-    Write-Log "Komorebi configured. It starts with whkd at next sign-in." "SUCCESS"
-    Write-Log "  To start now without signing out, run in a normal (non-admin) terminal: komorebic start --whkd" "INFO"
+    Write-Log "Komorebi configured. It starts with whkd & bar at next sign-in." "SUCCESS"
+    Write-Log "  To start now without signing out, run in a normal (non-admin) terminal: komorebic start --whkd --bar" "INFO"
 }
 Step-KomorebiSetup

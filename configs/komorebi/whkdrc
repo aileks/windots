@@ -8,13 +8,13 @@ alt + q : komorebic close
 alt + shift + m : komorebic minimize
 
 # app launchers
-alt + b : Start-Process zen
+alt + b : Start-Process "$Env:ProgramFiles\Zen Browser\zen.exe"
 alt + s : Start-Process "$Env:LOCALAPPDATA\Programs\signal-desktop\Signal.exe"
 alt + m : Start-Process "$Env:ProgramFiles\Fastmail\Fastmail.exe"
 alt + e : Start-Process FPilot
-alt + return : Start-Process wt
+alt + t : Start-Process wt
 
-alt + h : komorebic focus left
+alt + h : komorebic focus
 alt + j : komorebic focus down
 alt + k : komorebic focus up
 alt + l : komorebic focus right
@@ -38,7 +38,7 @@ alt + oem_minus : komorebic resize-axis horizontal decrease
 alt + shift + oem_plus : komorebic resize-axis vertical increase
 alt + shift + oem_minus : komorebic resize-axis vertical decrease
 
-alt + t : komorebic toggle-float
+alt + shift + space : komorebic toggle-float
 alt + shift + f : komorebic toggle-monocle
 alt + shift + r : komorebic retile
 alt + p : komorebic toggle-pause
