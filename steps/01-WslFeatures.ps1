@@ -14,12 +14,8 @@ function Step-WslFeatures {
     Set-StateCompleted "01-WslFeatures"
 
     if ($needsReboot) {
-        Register-ResumeAfterReboot $script:SetupScript
-        Write-Log "Reboot required to finish enabling WSL features." "WARN"
-        if (Ask-YesNo "Reboot now?" $true) {
-            Restart-Computer -Force
-        }
-        exit 0
+        Write-Log "WSL features enabled, but a reboot is required before WSL will work." "WARN"
+        Write-Log "  Reboot manually when setup finishes, then WSL/Arch will be usable." "WARN"
     }
 }
 Step-WslFeatures

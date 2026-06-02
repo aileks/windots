@@ -19,18 +19,14 @@ function Step-KomorebiSetup {
         return
     }
 
-    komorebic fetch-asc 2>&1 | Out-Null
-    Write-Log "  Fetched application-specific configs" "INFO"
+    komorebic fetch-asc 2>&1 | Write-Host
+    Write-Log "  Fetched application-specific configs (applications.json)" "INFO"
 
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" `
-        -Argument "-WindowStyle hidden -Command komorebic start --whkd"
-    $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
-        -ExecutionTimeLimit ([TimeSpan]::Zero)
-    Register-ScheduledTask -TaskName "Komorebi" -Action $action -Trigger $trigger `
-        -Settings $settings -Force -Description "Komorebi tiling window manager" 2>&1 | Out-Null
+    komorebic enable-autostart --whkd 2>&1 | Write-Host
+    Write-Log "  Enabled autostart (komorebi.lnk in shell:startup, starts komorebi + whkd)" "INFO"
 
     Set-StateCompleted "09-KomorebiSetup"
-    Write-Log "Komorebi configured with autostart" "SUCCESS"
+    Write-Log "Komorebi configured. It starts with whkd at next sign-in." "SUCCESS"
+    Write-Log "  To start now without signing out, run in a normal (non-admin) terminal: komorebic start --whkd" "INFO"
 }
 Step-KomorebiSetup

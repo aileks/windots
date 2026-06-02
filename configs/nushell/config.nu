@@ -52,7 +52,7 @@ $env.config = {
             mode: [vi_insert vi_normal]
             event: [
                 { send: menu name: history_menu }
-                { edit: { cmd: clear } }
+                { edit: clear }
             ]
         }
     ]

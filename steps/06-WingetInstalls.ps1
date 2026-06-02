@@ -20,49 +20,25 @@ function Step-WingetInstalls {
         return
     }
 
-    $packages = @(
-        @{ Id = "Zen-Team.Zen-Browser";           Name = "Zen Browser" }
-        @{ Id = "ZedIndustries.Zed";              Name = "Zed" }
-        @{ Id = "Bitwarden.Bitwarden";            Name = "Bitwarden" }
-        @{ Id = "OpenWhisperSystems.Signal";      Name = "Signal" }
-        @{ Id = "VideoLAN.VLC";                   Name = "VLC" }
-        @{ Id = "Nushell.Nushell";                Name = "Nushell" }
-        @{ Id = "LGUG2Z.komorebi";               Name = "Komorebi" }
-        @{ Id = "LGUG2Z.whkd";                   Name = "whkd" }
-        @{ Id = "Microsoft.WindowsTerminal";     Name = "Windows Terminal" }
-        @{ Id = "Microsoft.PowerToys";           Name = "PowerToys" }
-        @{ Id = "sharkdp.bat";                    Name = "bat" }
-        @{ Id = "ajeetdsouza.zoxide";            Name = "zoxide" }
-        @{ Id = "junegunn.fzf";                   Name = "fzf" }
-        @{ Id = "fastfetch-cli.fastfetch";        Name = "fastfetch" }
-        @{ Id = "Clement.bottom";                 Name = "bottom" }
-    )
+    $appsFile = Join-Path $script:RootDir "apps.json"
+    if (-not (Test-Path $appsFile)) {
+        Write-Log "  apps.json not found at $appsFile, skipping app installs." "WARN"
+        Set-StateCompleted "06-WingetInstalls"
+        return
+    }
 
-    $installed = 0
-    $skipped = 0
-    $failed = 0
+    Write-Log "  Importing packages from apps.json..." "INFO"
+    winget import -i $appsFile `
+        --accept-package-agreements --accept-source-agreements `
+        --ignore-unavailable --disable-interactivity --no-upgrade 2>&1 | Write-Host
 
-    foreach ($pkg in $packages) {
-        $already = winget list --id $pkg.Id --accept-source-agreements 2>$null | Select-String $pkg.Id
-        if ($already) {
-            $skipped++
-            continue
-        }
-
-        Write-Log "  Installing $($pkg.Name)..." "INFO"
-        $result = winget install -e --id $pkg.Id --accept-source-agreements --accept-package-agreements 2>&1
-
-        if ($LASTEXITCODE -eq 0) {
-            $installed++
-        } else {
-            $failed++
-            Write-Log "  Failed to install $($pkg.Name): $result" "WARN"
-        }
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "  winget import returned exit code $LASTEXITCODE (some packages may be unavailable or already installed)." "WARN"
     }
 
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-    Write-Log "winget: $installed installed, $skipped already present, $failed failed" "SUCCESS"
+    Write-Log "winget import complete" "SUCCESS"
     Set-StateCompleted "06-WingetInstalls"
 }
 Step-WingetInstalls

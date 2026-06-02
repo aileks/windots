@@ -28,10 +28,10 @@
     "defaults": {
       "colorScheme": "Ashen",
       "useAcrylic": true,
-      "opacity": 92,
+      "opacity": 85,
       "font": {
-        "face": "CommitMono Nerd Font",
-        "size": 11
+        "face": "CommitMono Nerd Font Mono",
+        "size": 12
       },
       "padding": "12",
       "cursorShape": "bar"
