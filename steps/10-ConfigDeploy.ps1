@@ -8,11 +8,6 @@ function Step-ConfigDeploy {
     Copy-Item "$script:RootDir/configs/nushell/config.nu" "$nushellDir\config.nu" -Force
     Write-Log "  Deployed nushell config" "INFO"
 
-    $starshipDir = "$env:USERPROFILE\.config"
-    if (-not (Test-Path $starshipDir)) { New-Item -Path $starshipDir -ItemType Directory -Force | Out-Null }
-    Copy-Item "$script:RootDir/configs/starship.toml" "$starshipDir\starship.toml" -Force
-    Write-Log "  Deployed starship.toml" "INFO"
-
     $termDir = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
     $termSettingsPath = "$termDir\settings.json"
 

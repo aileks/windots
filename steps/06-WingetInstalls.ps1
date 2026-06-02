@@ -10,7 +10,6 @@ function Step-WingetInstalls {
         @{ Id = "VideoLAN.VLC";                   Name = "VLC" }
         @{ Id = "Nomacs.Nomacs";                  Name = "Nomacs" }
         @{ Id = "Nushell.Nushell";                Name = "Nushell" }
-        @{ Id = "Starship.Starship";              Name = "Starship" }
         @{ Id = "LGUG2Z.komorebi";               Name = "Komorebi" }
         @{ Id = "LGUG2Z.whkd";                   Name = "whkd" }
         @{ Id = "Microsoft.WindowsTerminal";     Name = "Windows Terminal" }
