@@ -61,3 +61,4 @@ $env.config = {
 alias ll = ls -la
 alias la = ls -a
 alias cat = open --raw
+source ~/.zoxide.nu

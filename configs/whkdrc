@@ -5,7 +5,14 @@ alt + o : taskkill /f /im whkd.exe; Start-Process whkd -WindowStyle hidden
 alt + shift + o : komorebic reload-configuration
 
 alt + q : komorebic close
-alt + m : komorebic minimize
+alt + shift + m : komorebic minimize
+
+# app launchers
+alt + b : Start-Process zen
+alt + s : Start-Process "$Env:LOCALAPPDATA\Programs\signal-desktop\Signal.exe"
+alt + m : Start-Process "$Env:ProgramFiles\Fastmail\Fastmail.exe"
+alt + e : Start-Process FPilot
+alt + return : Start-Process wt
 
 alt + h : komorebic focus left
 alt + j : komorebic focus down

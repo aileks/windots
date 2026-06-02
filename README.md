@@ -11,7 +11,9 @@ Guided PowerShell setup script for a fresh Windows 11 24H2+ install.
 - Applies Explorer power-user tweaks
 - Applies mild privacy hardening
 - Activates Ultimate Performance power plan
-- Deploys komorebi config with workspace rules and auto-start (whkd, Alt modifier)
+- Deploys komorebi config with workspace rules, status bar, and auto-start
+- Adds app-launch hotkeys
+- Deploys Neovim config to `%LOCALAPPDATA%\nvim`
 - Deploys nushell config with vi mode, fuzzy completions, aliases
 - Deploys color scheme for Windows Terminal
 - Interactive git setup 
@@ -19,21 +21,9 @@ Guided PowerShell setup script for a fresh Windows 11 24H2+ install.
 ## Usage
 
 > [!NOTE]  
-> The script will prompt for elevation if not running as admin. Enabling the WSL/Virtual Machine Platform features may require a reboot — the script does **not** reboot automatically. If WSL features were just enabled, reboot manually, then re-run the WSL step (or `wsl --install --web-download -d archlinux`).
+> The script will prompt for elevation if not running as admin.
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process
 .\setup.ps1
 ```
-
-## Config locations
-
-| Config | Destination |
-|---|---|
-| komorebi.json | `~\komorebi.json` |
-| whkdrc | `~\.config\whkdrc` |
-| nushell env.nu | `%APPDATA%\nushell\env.nu` |
-| nushell config.nu | `%APPDATA%\nushell\config.nu` |
-| .wslconfig | `~\.wslconfig` |
-| wsl.conf | `/etc/wsl.conf` (inside WSL — apply manually) |
-| Windows Terminal | merged into `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` |

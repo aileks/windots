@@ -13,6 +13,11 @@ function Step-ConfigDeploy {
     Copy-Item "$script:RootDir/configs/zed/keymap.json" "$zedDir\keymap.json" -Force
     Write-Log "  Deployed Zed config" "INFO"
 
+    $nvimDir = "$env:LOCALAPPDATA\nvim"
+    if (-not (Test-Path $nvimDir)) { New-Item -Path $nvimDir -ItemType Directory -Force | Out-Null }
+    Copy-Item "$script:RootDir/configs/nvim/init.lua" "$nvimDir\init.lua" -Force
+    Write-Log "  Deployed Neovim config (plugins auto-install on first launch)" "INFO"
+
     $termPkgDir = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe"
     $termDir = "$termPkgDir\LocalState"
     $termSettingsPath = "$termDir\settings.json"
