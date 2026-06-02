@@ -12,9 +12,9 @@ function Step-ConfigDeploy {
     $termSettingsPath = "$termDir\settings.json"
 
     if (Test-Path $termSettingsPath) {
-        $settings = Get-Content $termSettingsPath -Raw | ConvertFrom-Json -Depth 20
+        $settings = Get-Content $termSettingsPath -Raw | ConvertFrom-Json
 
-        $ashenScheme = Get-Content "$script:RootDir/configs/WindowsTerminal-settings.json" -Raw | ConvertFrom-Json -Depth 10
+        $ashenScheme = Get-Content "$script:RootDir/configs/WindowsTerminal-settings.json" -Raw | ConvertFrom-Json
         $ashenColors = $ashenScheme.schemes[0]
 
         if (-not $settings.schemes) { $settings | Add-Member -NotePropertyName "schemes" -NotePropertyValue @() -Force }

@@ -14,10 +14,10 @@ function Step-WslFeatures {
     Set-StateCompleted "01-WslFeatures"
 
     if ($needsReboot) {
-        Register-ResumeAfterReboot $PSCommandPath
+        Register-ResumeAfterReboot $script:SetupScript
         Write-Log "Reboot required to finish enabling WSL features." "WARN"
         if (Ask-YesNo "Reboot now?" $true) {
-            Restart-Computer
+            Restart-Computer -Force
         }
         exit 0
     }

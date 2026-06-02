@@ -18,7 +18,7 @@ function Step-WingetInstalls {
         @{ Id = "ajeetdsouza.zoxide";            Name = "zoxide" }
         @{ Id = "junegunn.fzf";                   Name = "fzf" }
         @{ Id = "fastfetch-cli.fastfetch";        Name = "fastfetch" }
-        @{ Id = "Clement.ts.bottom";              Name = "bottom" }
+        @{ Id = "Clement.bottom";                 Name = "bottom" }
     )
 
     $installed = 0

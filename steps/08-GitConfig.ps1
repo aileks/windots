@@ -11,7 +11,7 @@ function Step-GitConfig {
     git config --global user.name $name
     git config --global user.email $email
     git config --global init.defaultBranch main
-    git config --global core.autocrlf auto
+    git config --global core.autocrlf true
     git config --global pull.rebase true
     git config --global core.editor "zed --wait"
     git config --global core.pager ""

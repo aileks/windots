@@ -26,6 +26,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 > [!NOTE]  
 > The script will prompt for elevation if not running as admin. If WSL features require a reboot, the script registers a RunOnce entry and resumes automatically after restart.
 
+> [!NOTE]  
+> Arch is installed with `--no-launch`, so no Linux user is created during setup. After the script finishes, run `wsl -d archlinux` once to create your user account.
+
 ## Config locations
 
 | Config | Destination |

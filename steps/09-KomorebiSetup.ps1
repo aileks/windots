@@ -18,7 +18,8 @@ function Step-KomorebiSetup {
     $action = New-ScheduledTaskAction -Execute "powershell.exe" `
         -Argument "-WindowStyle hidden -Command komorebic start --whkd"
     $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
+        -ExecutionTimeLimit ([TimeSpan]::Zero)
     Register-ScheduledTask -TaskName "Komorebi" -Action $action -Trigger $trigger `
         -Settings $settings -Force -Description "Komorebi tiling window manager" 2>&1 | Out-Null
 
