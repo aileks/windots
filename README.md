@@ -23,7 +23,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 .\setup.ps1
 ```
 
-> ![NOTE]  
+> [!NOTE]  
 > The script will prompt for elevation if not running as admin. If WSL features require a reboot, the script registers a RunOnce entry and resumes automatically after restart.
 
 ## Config locations
