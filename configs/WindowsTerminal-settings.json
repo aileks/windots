@@ -34,7 +34,7 @@
         "size": 12
       },
       "padding": "12",
-      "cursorShape": "bar"
+      "cursorShape": "filledBox"
     }
   }
 }
