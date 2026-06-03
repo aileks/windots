@@ -11,13 +11,13 @@
           "PackageIdentifier": "VideoLAN.VLC"
         },
         {
+          "PackageIdentifier": "Neovim.Neovim"
+        },
+        {
           "PackageIdentifier": "Zen-Team.Zen-Browser"
         },
         {
           "PackageIdentifier": "LGUG2Z.komorebi"
-        },
-        {
-          "PackageIdentifier": "Neovim.Neovim"
         },
         {
           "PackageIdentifier": "LGUG2Z.masir"
@@ -60,6 +60,15 @@
         },
         {
           "PackageIdentifier": "sharkdp.bat"
+        },
+        {
+          "PackageIdentifier": "DigitalScholar.Zotero"
+        },
+        {
+          "PackageIdentifier": "Logseq.Logseq"
+        },
+        {
+          "PackageIdentifier": "Klocman.BulkCrapUninstaller"
         },
         {
           "PackageIdentifier": "LocalSend.LocalSend"
