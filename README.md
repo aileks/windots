@@ -27,3 +27,6 @@ Guided PowerShell setup script for a fresh Windows 11 24H2+ install.
 Set-ExecutionPolicy Bypass -Scope Process
 .\setup.ps1
 ```
+
+## Known Issues
+- PowerToys must load after komorebi or PowerToys keybinds will take precedence.
