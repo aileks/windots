@@ -1,104 +1,107 @@
 {
-	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2026-06-02T15:56:02.054-00:00",
-	"Sources" : 
-	[
-		{
-			"Packages" : 
-			[
-				{
-					"PackageIdentifier" : "VideoLAN.VLC"
-				},
-				{
-					"PackageIdentifier" : "Git.Git"
-				},
-				{
-					"PackageIdentifier" : "ZedIndustries.Zed"
-				},
-				{
-					"PackageIdentifier" : "Zen-Team.Zen-Browser"
-				},
-				{
-					"PackageIdentifier" : "LGUG2Z.komorebi"
-				},
-				{
-					"PackageIdentifier" : "7zip.7zip"
-				},
-				{
-					"PackageIdentifier" : "Neovim.Neovim"
-				},
-				{
-					"PackageIdentifier" : "LGUG2Z.whkd"
-				},
-				{
-					"PackageIdentifier" : "Nushell.Nushell"
-				},
-				{
-					"PackageIdentifier" : "Clement.bottom"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.EdgeWebView2Runtime"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x64"
-				},
-				{
-					"PackageIdentifier" : "Bitwarden.Bitwarden"
-				},
-				{
-					"PackageIdentifier" : "OpenWhisperSystems.Signal"
-				},
-				{
-					"PackageIdentifier" : "GlennDelahoy.SnappyDriverInstallerOrigin"
-				},
-				{
-					"PackageIdentifier" : "Voidstar.FilePilot"
-				},
-				{
-					"PackageIdentifier" : "ajeetdsouza.zoxide"
-				},
-				{
-					"PackageIdentifier" : "junegunn.fzf"
-				},
-				{
-					"PackageIdentifier" : "sharkdp.bat"
-				},
-				{
-					"PackageIdentifier" : "LocalSend.LocalSend"
-				},
-				{
-					"PackageIdentifier" : "ZedIndustries.Zed"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.PowerToys"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.PowerShell"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.UI.Xaml.2.8"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VCLibs.Desktop.14"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VCLibs.14"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.WindowsAppRuntime.1.8"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.WindowsTerminal"
-				}
-			],
-			"SourceDetails" : 
-			{
-				"Argument" : "https://cdn.winget.microsoft.com/cache",
-				"Identifier" : "Microsoft.Winget.Source_8wekyb3d8bbwe",
-				"Name" : "winget",
-				"Type" : "Microsoft.PreIndexed.Package"
-			}
-		}
-	],
-	"WinGetVersion" : "1.28.240"
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "CreationDate": "2026-06-02T15:56:02.054-00:00",
+  "Sources": [
+    {
+      "Packages": [
+        {
+          "PackageIdentifier": "VideoLAN.VLC"
+        },
+        {
+          "PackageIdentifier": "Git.Git"
+        },
+        {
+          "PackageIdentifier": "OpenJS.NodeJS.LTS"
+        },
+        {
+          "PackageIdentifier": "AutoHotkey.AutoHotkey"
+        },
+        {
+          "PackageIdentifier": "ZedIndustries.Zed"
+        },
+        {
+          "PackageIdentifier": "Zen-Team.Zen-Browser"
+        },
+        {
+          "PackageIdentifier": "LGUG2Z.komorebi"
+        },
+        {
+          "PackageIdentifier": "7zip.7zip"
+        },
+        {
+          "PackageIdentifier": "Neovim.Neovim"
+        },
+        {
+          "PackageIdentifier": "AutoHotkey.AutoHotkey"
+        },
+        {
+          "PackageIdentifier": "Nushell.Nushell"
+        },
+        {
+          "PackageIdentifier": "Clement.bottom"
+        },
+        {
+          "PackageIdentifier": "Microsoft.EdgeWebView2Runtime"
+        },
+        {
+          "PackageIdentifier": "Microsoft.VCRedist.2015+.x64"
+        },
+        {
+          "PackageIdentifier": "Bitwarden.Bitwarden"
+        },
+        {
+          "PackageIdentifier": "OpenWhisperSystems.Signal"
+        },
+        {
+          "PackageIdentifier": "GlennDelahoy.SnappyDriverInstallerOrigin"
+        },
+        {
+          "PackageIdentifier": "Voidstar.FilePilot"
+        },
+        {
+          "PackageIdentifier": "ajeetdsouza.zoxide"
+        },
+        {
+          "PackageIdentifier": "junegunn.fzf"
+        },
+        {
+          "PackageIdentifier": "sharkdp.bat"
+        },
+        {
+          "PackageIdentifier": "LocalSend.LocalSend"
+        },
+        {
+          "PackageIdentifier": "ZedIndustries.Zed"
+        },
+        {
+          "PackageIdentifier": "Microsoft.PowerToys"
+        },
+        {
+          "PackageIdentifier": "Microsoft.PowerShell"
+        },
+        {
+          "PackageIdentifier": "Microsoft.UI.Xaml.2.8"
+        },
+        {
+          "PackageIdentifier": "Microsoft.VCLibs.Desktop.14"
+        },
+        {
+          "PackageIdentifier": "Microsoft.VCLibs.14"
+        },
+        {
+          "PackageIdentifier": "Microsoft.WindowsAppRuntime.1.8"
+        },
+        {
+          "PackageIdentifier": "Microsoft.WindowsTerminal"
+        }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    }
+  ],
+  "WinGetVersion": "1.28.240"
 }
