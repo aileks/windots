@@ -17,8 +17,7 @@ function Step-ExplorerTweaks {
         }
     }
 
-    $classicMenuPath = "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"
-    Set-RegistrySafe -Path $classicMenuPath -Name "(Default)" -Value "" -Type String
+    Set-RegistrySafe -Path  "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" -Name "(Default)" -Value "" -Type String
 
     Set-StateCompleted "03-ExplorerTweaks"
     Write-Log "Explorer configured" "SUCCESS"

@@ -1,16 +1,16 @@
-.shell cmd
+.shell pwsh
 .pause win + shift + oem_2
 
-win + o : taskkill /f /im whkd.exe & start /b whkd
+win + o : Stop-Process -Name whkd -Force; Start-Process whkd -WindowStyle Hidden
 win + shift + o : komorebic reload-configuration
 
 win + q : komorebic close
 win + shift + m : komorebic minimize
 
-win + b : start /b "%ProgramFiles%\Zen Browser\zen.exe"
-win + s : start /b "%LOCALAPPDATA%\Programs\signal-desktop\Signal.exe"
-win + m : start /b "%ProgramFiles%\Fastmail\Fastmail.exe"
-win + t : start /b wt
+win + b : Start-Process "$env:ProgramFiles\Zen Browser\zen.exe"
+win + s : Start-Process "$env:LOCALAPPDATA\Programs\signal-desktop\Signal.exe"
+win + m : Start-Process "$env:ProgramFiles\Fastmail\Fastmail.exe"
+win + t : Start-Process wt
 
 win + h : komorebic focus left
 win + j : komorebic focus down

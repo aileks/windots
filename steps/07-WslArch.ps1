@@ -22,7 +22,7 @@ function Step-WslArch {
     $wslConfigDest = "$env:USERPROFILE\.wslconfig"
     Copy-Item $wslConfigSource $wslConfigDest -Force
     Write-Log "  Deployed .wslconfig (mirrored networking)" "INFO"
-    Write-Log "  configs/wsl/wsl.conf is provided to apply manually inside the distro (sudo cp to /etc/wsl.conf) after creating your Linux user." "INFO"
+    Write-Log "  configs/wsl/wsl.conf is provided to apply manually inside the distro after creating your Linux user." "INFO"
 
     Set-StateCompleted "07-WslArch"
     Write-Log "WSL Arch setup complete. Run 'wsl -d archlinux' to create your Linux user." "SUCCESS"
