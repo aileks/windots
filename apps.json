@@ -59,6 +59,9 @@
           "PackageIdentifier": "junegunn.fzf"
         },
         {
+          "PackageIdentifier": "TechPowerUp.NVCleanstall"
+        },
+        {
           "PackageIdentifier": "sharkdp.bat"
         },
         {
