@@ -61,4 +61,4 @@ win + shift + 5 : komorebic move-to-workspace 4
 win + shift + 6 : komorebic move-to-workspace 5
 win + shift + 7 : komorebic move-to-workspace 6
 
-win + escape : reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 0 /f && rundll32.exe user32.dll,LockWorkStation && ping 127.0.0.1 -n 2 >nul && reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 1 /f
+win + escape : schtasks /run /tn KomorebiLock

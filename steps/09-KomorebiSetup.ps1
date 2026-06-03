@@ -14,6 +14,24 @@ function Step-KomorebiSetup {
     Copy-Item "$script:RootDir/configs/komorebi/whkdrc" $whkdConfig -Force
     Write-Log "  Deployed komorebi.json, komorebi.bar.json and whkdrc" "INFO"
 
+    # Win+L is remapped to "focus right" in whkdrc; that only works if the OS lock is
+    # disabled, so a hotkey daemon can intercept Win+L. This policy also disables all
+    # locking, so Win+Escape locks via the elevated KomorebiLock task registered below.
+    Set-RegistrySafe -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+        -Name "DisableLockWorkstation" -Value 1 -Type DWord
+    Write-Log "  Set DisableLockWorkstation=1 (frees Win+L for komorebi)" "INFO"
+
+    # Win+Escape -> lock. whkd runs non-elevated and cannot write the protected Policies
+    # key, so it triggers this elevated on-demand task (no UAC prompt). The task toggles
+    # the policy off, locks, then restores it to keep the Win+L remap working.
+    $lockCmd = '/c reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 0 /f && rundll32.exe user32.dll,LockWorkStation && ping 127.0.0.1 -n 2 >nul && reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 1 /f'
+    $action    = New-ScheduledTaskAction -Execute "cmd.exe" -Argument $lockCmd
+    $principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Highest
+    $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
+                     -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 1)
+    Register-ScheduledTask -TaskName "KomorebiLock" -Action $action -Principal $principal -Settings $settings -Force | Out-Null
+    Write-Log "  Registered KomorebiLock scheduled task (Win+Escape lock)" "INFO"
+
     if (-not (Get-Command komorebic -ErrorAction SilentlyContinue)) {
         Write-Log "  komorebic not found, skipping fetch-asc and autostart task" "WARN"
         return
