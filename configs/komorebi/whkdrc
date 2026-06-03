@@ -32,6 +32,9 @@ win + oem_1 : komorebic unstack
 win + oem_4 : komorebic cycle-stack previous
 win + oem_6 : komorebic cycle-stack next
 
+win + oem_period : komorebic cycle-move-to-monitor previous
+win + oem_comma : komorebic cycle-move-to-monitor next
+
 win + oem_plus : komorebic resize-axis horizontal increase
 win + oem_minus : komorebic resize-axis horizontal decrease
 win + shift + oem_plus : komorebic resize-axis vertical increase
