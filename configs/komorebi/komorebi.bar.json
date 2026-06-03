@@ -42,7 +42,7 @@
     { "Cpu": { "enable": true } },
     { "Memory": { "enable": true } },
     { "Network": { "enable": true, "show_activity": true, "show_total_activity": false } },
-    { "Date": { "enable": true, "format": "MonthDateYear" } },
+    { "Date": { "enable": true, "format": "DayDateMonthYear" } },
     { "Time": { "enable": true, "format": "TwentyFourHour" } }
   ]
 }
