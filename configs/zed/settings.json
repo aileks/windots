@@ -1,4 +1,13 @@
 {
+  "collaboration_panel": {
+    "button": false
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "project_panel": {
+    "dock": "left"
+  },
   "disable_ai": true,
   "telemetry": { "diagnostics": false, "metrics": false },
   "restore_on_startup": "launchpad",
@@ -7,11 +16,7 @@
   "buffer_font_size": 16,
   "buffer_line_height": "comfortable",
   "agent_buffer_font_size": 16,
-  "theme": {
-    "mode": "dark",
-    "light": "One Light",
-    "dark": "Ashen",
-  },
+  "theme": "Ashen",
   "icon_theme": "Colored Zed Icons Theme Dark",
 
   "tab_bar": {
