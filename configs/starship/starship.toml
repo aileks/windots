@@ -4,9 +4,9 @@ format = "$directory$git_branch$git_status$fill$cmd_duration\n$character"
 symbol = " "
 
 [character]
-success_symbol = "[>](#d87c4a)"
-error_symbol = "[>](#B14242)"
-vimcmd_symbol = "[<](#d87c4a)"
+success_symbol = "[](#d87c4a)"
+error_symbol = "[](#B14242)"
+vimcmd_symbol = "[](#d87c4a)"
 
 [directory]
 style = "#d5d5d5"
