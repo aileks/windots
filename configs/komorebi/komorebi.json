@@ -15,6 +15,13 @@
       "matching_strategy": "Equals"
     }
   ],
+  "object_name_change_applications": [
+    {
+      "kind": "Exe",
+      "id": "PBIDesktop.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
   "theme": {
     "palette": "Custom",
     "colours": {
