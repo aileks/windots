@@ -14,7 +14,7 @@ function Step-ConfigDeploy {
 
     $starshipDir = "$env:USERPROFILE\.config"
     if (-not (Test-Path $starshipDir)) { New-Item -Path $starshipDir -ItemType Directory -Force | Out-Null }
-    Copy-Item "$script:RootDir/configs/starship.toml" "$starshipDir\starship.toml" -Force
+    Copy-Item "$script:RootDir/configs/starship/starship.toml" "$starshipDir\starship.toml" -Force
     Write-Log "  Deployed starship.toml" "INFO"
 
     $batDir = "$env:APPDATA\bat"
@@ -36,7 +36,7 @@ function Step-ConfigDeploy {
     if (Test-Path $termSettingsPath) {
         $settings = Get-Content $termSettingsPath -Raw | ConvertFrom-Json
 
-        $ashenScheme = Get-Content "$script:RootDir/configs/WindowsTerminal-settings.json" -Raw | ConvertFrom-Json
+        $ashenScheme = Get-Content "$script:RootDir/configs/windows-terminal/settings.json" -Raw | ConvertFrom-Json
         $ashenColors = $ashenScheme.schemes[0]
 
         if (-not $settings.schemes) { $settings | Add-Member -NotePropertyName "schemes" -NotePropertyValue @() -Force }
@@ -60,7 +60,7 @@ function Step-ConfigDeploy {
         Write-Log "  Merged Ashen theme into Windows Terminal" "INFO"
     } elseif (Test-Path $termPkgDir) {
         if (-not (Test-Path $termDir)) { New-Item -Path $termDir -ItemType Directory -Force | Out-Null }
-        Copy-Item "$script:RootDir/configs/WindowsTerminal-settings.json" $termSettingsPath -Force
+        Copy-Item "$script:RootDir/configs/windows-terminal/settings.json" $termSettingsPath -Force
         Write-Log "  Deployed fresh Windows Terminal settings" "INFO"
     } else {
         Write-Log "  Windows Terminal not installed, skipping Terminal config" "WARN"
