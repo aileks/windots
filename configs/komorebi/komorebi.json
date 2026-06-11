@@ -47,6 +47,10 @@
     "monocle_border": "Base0F",
     "unfocused_border": "Base03"
   },
+  "display_index_preferences": {
+    "0": "507BNBJ1L485",
+    "1": "454702C763W01"
+  },
   "monitors": [
     {
       "workspaces": [
