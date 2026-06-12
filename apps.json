@@ -1,11 +1,14 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2026-06-06T13:16:55.893-00:00",
+  "CreationDate": "2026-06-12T12:28:50.574-00:00",
   "Sources": [
     {
       "Packages": [
         {
           "PackageIdentifier": "Git.Git"
+        },
+        {
+          "PackageIdentifier": "IVPN.IVPN"
         },
         {
           "PackageIdentifier": "VideoLAN.VLC"
@@ -17,25 +20,25 @@
           "PackageIdentifier": "DigitalScholar.Zotero"
         },
         {
-          "PackageIdentifier": "LGUG2Z.komorebi"
-        },
-        {
-          "PackageIdentifier": "LGUG2Z.masir"
-        },
-        {
-          "PackageIdentifier": "LGUG2Z.whkd"
-        },
-        {
           "PackageIdentifier": "7zip.7zip"
-        },
-        {
-          "PackageIdentifier": "Elgato.StreamDeck"
         },
         {
           "PackageIdentifier": "Neovim.Neovim"
         },
         {
+          "PackageIdentifier": "LGUG2Z.komorebi"
+        },
+        {
+          "PackageIdentifier": "LGUG2Z.whkd"
+        },
+        {
+          "PackageIdentifier": "LGUG2Z.masir"
+        },
+        {
           "PackageIdentifier": "Microsoft.Coreutils"
+        },
+        {
+          "PackageIdentifier": "OpenJS.NodeJS.LTS"
         },
         {
           "PackageIdentifier": "TechPowerUp.NVCleanstall"
@@ -59,9 +62,6 @@
           "PackageIdentifier": "RamenSoftware.Windhawk"
         },
         {
-          "PackageIdentifier": "Microsoft.PowerBI"
-        },
-        {
           "PackageIdentifier": "Bitwarden.Bitwarden"
         },
         {
@@ -83,9 +83,6 @@
           "PackageIdentifier": "eza-community.eza"
         },
         {
-          "PackageIdentifier": "ImputNet.Helium"
-        },
-        {
           "PackageIdentifier": "junegunn.fzf"
         },
         {
@@ -95,16 +92,13 @@
           "PackageIdentifier": "LocalSend.LocalSend"
         },
         {
-          "PackageIdentifier": "ZedIndustries.Zed"
+          "PackageIdentifier": "Microsoft.VisualStudioCode"
         },
         {
           "PackageIdentifier": "ChatterinoTeam.Chatterino"
         },
         {
           "PackageIdentifier": "Microsoft.PowerShell"
-        },
-        {
-          "PackageIdentifier": "Microsoft.WindowsTerminal"
         }
       ],
       "SourceDetails": {
