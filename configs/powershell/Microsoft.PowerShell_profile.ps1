@@ -54,7 +54,7 @@ if (Get-Module -ListAvailable PSFzf) {
 }
 
 # Remove PowerShell aliases so Microsoft.Coreutils executables resolve first.
-'ls', 'cat', 'cp', 'mv', 'rm', 'echo', 'sort', 'tee', 'pwd' |
+'ls', 'cat', 'cp', 'mv', 'rm', 'echo', 'sort', 'tee', 'pwd', 'gp' |
 ForEach-Object { Remove-Item "Alias:$_" -Force -ErrorAction SilentlyContinue }
 Remove-Item Function:mkdir -Force -ErrorAction SilentlyContinue
 
@@ -68,6 +68,7 @@ function gca { git commit --amend @args }
 function gcmsg { git commit --message @args }
 function gco { git checkout @args }
 function gm { git merge @args }
+function gp { git push @args }
 function glog { git log --oneline --decorate --graph --all @args }
 function ll { ls -la @args }
 function la { ls -a @args }
