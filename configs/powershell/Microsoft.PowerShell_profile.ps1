@@ -67,6 +67,7 @@ function gba { git branch --all @args }
 function gca { git commit --amend @args }
 function gcmsg { git commit --message @args }
 function gco { git checkout @args }
+function gcl { git clone @args }
 function gm { git merge @args }
 function gp { git push @args }
 function glog { git log --oneline --decorate --graph --all @args }
@@ -74,9 +75,10 @@ function ll { ls -la @args }
 function la { ls -a @args }
 function fzf { fzf.exe --style full @args }
 
-if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
-}
 if (Get-Command starship -ErrorAction SilentlyContinue) {
     Invoke-Expression (&starship init powershell)
+}
+
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+    Invoke-Expression (& { (zoxide init powershell --hook prompt | Out-String) })
 }
