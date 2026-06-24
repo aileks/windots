@@ -1,4 +1,4 @@
-.shell pwsh
+.shell powershell
 .pause win + shift + oem_2
 
 win + o : Stop-Process -Name whkd -Force; Start-Process whkd -WindowStyle Hidden
