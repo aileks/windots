@@ -79,6 +79,36 @@
       ]
     },
     {
+      "key": "security",
+      "name": "Security",
+      "allowMultiple": true,
+      "items": [
+        { "name": "Bitwarden", "id": "Bitwarden.Bitwarden", "installer": "winget", "description": "password manager" },
+        { "name": "1Password", "id": "AgileBits.1Password", "installer": "winget", "description": "password manager" },
+        { "name": "KeePassXC", "id": "KeePassXCTeam.KeePassXC", "installer": "winget", "description": "offline password manager" }
+      ]
+    },
+    {
+      "key": "productivity",
+      "name": "Productivity",
+      "allowMultiple": true,
+      "items": [
+        { "name": "Obsidian", "id": "Obsidian.Obsidian", "installer": "winget", "description": "local Markdown notes" },
+        { "name": "LocalSend", "id": "LocalSend.LocalSend", "installer": "winget", "description": "local device file sharing" }
+      ]
+    },
+    {
+      "key": "developerTools",
+      "name": "Developer tools",
+      "allowMultiple": true,
+      "items": [
+        { "name": "GitHub Desktop", "id": "GitHub.GitHubDesktop", "installer": "winget" },
+        { "name": "Docker Desktop", "id": "Docker.DockerDesktop", "installer": "winget", "description": "container development" },
+        { "name": "Bruno", "id": "Bruno.Bruno", "installer": "winget", "description": "API client" },
+        { "name": "DevToys", "id": "DevToys-app.DevToys", "installer": "winget", "description": "developer utilities" }
+      ]
+    },
+    {
       "key": "utilities",
       "name": "Utilities",
       "allowMultiple": true,
@@ -149,6 +179,36 @@
           "id": "RamenSoftware.Windhawk",
           "installer": "winget",
           "description": "Windows shell customization"
+        },
+        {
+          "name": "ShareX",
+          "id": "ShareX.ShareX",
+          "installer": "winget",
+          "description": "screenshots and screen recording"
+        },
+        {
+          "name": "WizTree",
+          "id": "AntibodySoftware.WizTree",
+          "installer": "winget",
+          "description": "disk space analysis"
+        },
+        {
+          "name": "EarTrumpet",
+          "id": "File-New-Project.EarTrumpet",
+          "installer": "winget",
+          "description": "per-app volume control"
+        },
+        {
+          "name": "SumatraPDF",
+          "id": "SumatraPDF.SumatraPDF",
+          "installer": "winget",
+          "description": "lightweight document reader"
+        },
+        {
+          "name": "Rufus",
+          "id": "Rufus.Rufus",
+          "installer": "winget",
+          "description": "bootable USB creation"
         }
       ]
     }

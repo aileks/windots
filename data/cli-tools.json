@@ -1,0 +1,37 @@
+{
+  "categories": [
+    {
+      "key": "cliTools",
+      "name": "CLI tools",
+      "allowMultiple": true,
+      "items": [
+        { "name": "Git", "package": "git", "command": "git", "description": "version control" },
+        { "name": "GitHub CLI", "package": "gh", "command": "gh", "description": "GitHub from the terminal" },
+        { "name": "PowerShell 7", "package": "pwsh", "command": "pwsh", "description": "modern PowerShell" },
+        { "name": "ripgrep", "package": "ripgrep", "command": "rg", "description": "fast text search" },
+        { "name": "fd", "package": "fd", "command": "fd", "description": "fast file search" },
+        { "name": "fzf", "package": "fzf", "command": "fzf", "description": "fuzzy finder" },
+        { "name": "zoxide", "package": "zoxide", "command": "zoxide", "description": "smarter directory navigation" },
+        { "name": "jq", "package": "jq", "command": "jq", "description": "JSON processor" },
+        { "name": "yq", "package": "yq", "command": "yq", "description": "YAML processor" },
+        { "name": "bat", "package": "bat", "command": "bat", "description": "syntax-aware cat replacement" },
+        { "name": "eza", "package": "eza", "command": "eza", "description": "modern ls replacement" },
+        { "name": "Starship", "package": "starship", "command": "starship", "description": "cross-shell prompt" },
+        { "name": "Fastfetch", "package": "fastfetch", "command": "fastfetch", "description": "system information" },
+        { "name": "btop", "package": "btop", "command": "btop", "description": "resource monitor" },
+        { "name": "delta", "package": "delta", "command": "delta", "description": "syntax-highlighted Git diffs" },
+        {
+          "name": "lazygit",
+          "package": "lazygit",
+          "command": "lazygit",
+          "description": "terminal Git UI",
+          "bucket": {
+            "name": "extras",
+            "source": "https://github.com/ScoopInstaller/Extras"
+          }
+        },
+        { "name": "just", "package": "just", "command": "just", "description": "project command runner" }
+      ]
+    }
+  ]
+}
