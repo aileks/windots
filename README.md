@@ -1,6 +1,6 @@
 # Windows Setup
 
-My setup for my Windows 11 24H2+ machines.
+Forced to use Windows so I might as well make it usable. Windows 11 24H2+ only.
 
 > [!IMPORTANT]
 > Keep this repository at its cloned path. Configs are symlinked where possible. Moving the repository leaves those links dangling.
