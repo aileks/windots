@@ -48,6 +48,8 @@ if (Test-ResumingAfterReboot) {
     Write-Log "Resumed after WSL enablement reboot" "INFO"
 }
 
+if (-not (Initialize-SetupRepository)) { exit 1 }
+
 Write-Host ""
 Write-Host "win-setup changes Windows policies and privacy settings, installs software, links configs," -ForegroundColor Yellow
 Write-Host "configures Ubuntu, and may require another reboot. Existing configs are timestamp-backed up." -ForegroundColor Yellow

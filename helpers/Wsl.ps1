@@ -1,22 +1,26 @@
-$script:WslDistro = "Ubuntu-26.04"
+$script:WslDistro = "Ubuntu"
+$script:RepositoryUrl = "https://codeberg.org/aileks/win-setup.git"
 $script:NpipeRelayVersion = "1.11.4"
 $script:NpipeRelaySha256 = "cea82cf5c9c22a28bef8075750acb7958f766393baebff4597cf21442f71c4b3"
 
 function Test-WslPlatformEnabled {
+    $previousPreference = $ErrorActionPreference
     try {
-        $wsl = Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux"
-        $vm = Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform"
-        return $wsl.State -eq "Enabled" -and $vm.State -eq "Enabled"
+        $ErrorActionPreference = "Continue"
+        $null = @(& wsl.exe --list --quiet 2>$null)
+        return $LASTEXITCODE -eq 0
     } catch {
-        Write-Log "Unable to inspect WSL features: $($_.Exception.Message)" "ERROR"
+        Write-Log "Unable to run WSL: $($_.Exception.Message)" "ERROR"
         return $false
+    } finally {
+        $ErrorActionPreference = $previousPreference
     }
 }
 
 function Enable-WslPlatformAndReboot {
     Register-ResumeAfterReboot -ScriptPath $script:SetupScript
-    Write-Log "Enabling WSL without installing a distribution..." "INFO"
-    $output = @(& wsl.exe --install --no-distribution 2>&1)
+    Write-Log "Installing WSL and Ubuntu..." "INFO"
+    $output = @(& wsl.exe --install 2>&1)
     $exitCode = $LASTEXITCODE
     foreach ($line in $output) { Write-Log "  $line" "INFO" }
     if ($exitCode -ne 0) {
@@ -95,6 +99,103 @@ function ConvertTo-WslPath {
     $output = @(& wsl.exe --distribution $script:WslDistro --exec wslpath -u $WindowsPath 2>$null)
     if ($LASTEXITCODE -ne 0) { return "" }
     (($output | Select-Object -First 1) -as [string]).Trim()
+}
+
+function Test-SetupRepositoryPath {
+    param([Parameter(Mandatory)][string]$Path)
+
+    foreach ($requiredPath in @(".git", "configs", "data", "helpers", "lib", "personal", "setup.ps1")) {
+        if (-not (Test-Path -LiteralPath (Join-Path $Path $requiredPath))) { return $false }
+    }
+    return $true
+}
+
+function Initialize-SetupRepository {
+    $targetPath = Join-Path $env:USERPROFILE "win-setup"
+    $currentPath = [IO.Path]::GetFullPath($script:RootDir).TrimEnd('\')
+    $targetFullPath = [IO.Path]::GetFullPath($targetPath).TrimEnd('\')
+
+    if ($currentPath -ieq $targetFullPath -and (Test-SetupRepositoryPath $targetPath)) {
+        return $true
+    }
+
+    if (-not (Test-SetupRepositoryPath $targetPath)) {
+        if (-not (Install-WslDistro)) {
+            return $false
+        }
+
+        $linuxUser = Initialize-WslUser
+        if ([string]::IsNullOrWhiteSpace($linuxUser)) {
+            Write-Log "Ubuntu user initialization is incomplete" "ERROR"
+            return $false
+        }
+
+        $null = @(& wsl.exe --distribution $script:WslDistro --exec git --version 2>$null)
+        if ($LASTEXITCODE -ne 0) {
+            Write-Log "Installing Git in Ubuntu..." "INFO"
+            $gitOutput = @(& wsl.exe --distribution $script:WslDistro --user root --exec sh -lc `
+                "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git ca-certificates" 2>&1)
+            $gitExitCode = $LASTEXITCODE
+            foreach ($line in $gitOutput) { Write-Log "  $line" "INFO" }
+            if ($gitExitCode -ne 0) {
+                Write-Log "Git installation failed with exit code $gitExitCode" "ERROR"
+                return $false
+            }
+        }
+
+        $backupPath = $null
+        if (Test-Path -LiteralPath $targetPath) {
+            if (-not (Ask-YesNo "$targetPath exists but is not the setup repository. Back it up and continue?" $false)) {
+                Write-Log "Repository clone cancelled" "WARN"
+                return $false
+            }
+            $backupPath = "$targetPath.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+        }
+
+        $stagingPath = Join-Path $env:USERPROFILE ".win-setup-clone-$([guid]::NewGuid())"
+        $wslStagingPath = ConvertTo-WslPath $stagingPath
+        if ([string]::IsNullOrWhiteSpace($wslStagingPath)) {
+            Write-Log "Could not translate the repository path for WSL" "ERROR"
+            return $false
+        }
+
+        try {
+            Write-Log "Cloning win-setup to $targetPath..." "INFO"
+            $cloneOutput = @(& wsl.exe --distribution $script:WslDistro --exec git clone --quiet -- `
+                $script:RepositoryUrl $wslStagingPath 2>&1)
+            $cloneExitCode = $LASTEXITCODE
+            foreach ($line in $cloneOutput) { Write-Log "  $line" "INFO" }
+            if ($cloneExitCode -ne 0 -or -not (Test-SetupRepositoryPath $stagingPath)) {
+                Write-Log "Repository clone failed with exit code $cloneExitCode" "ERROR"
+                return $false
+            }
+
+            if ($backupPath) {
+                Move-Item -LiteralPath $targetPath -Destination $backupPath
+                Write-Log "Backed up existing repository path to $backupPath" "INFO"
+            }
+
+            try {
+                Move-Item -LiteralPath $stagingPath -Destination $targetPath
+            } catch {
+                if ($backupPath -and -not (Test-Path -LiteralPath $targetPath)) {
+                    Move-Item -LiteralPath $backupPath -Destination $targetPath
+                }
+                throw
+            }
+        } catch {
+            Write-Log "Repository setup failed: $($_.Exception.Message)" "ERROR"
+            return $false
+        } finally {
+            if (Test-Path -LiteralPath $stagingPath) {
+                Remove-Item -LiteralPath $stagingPath -Recurse -Force
+            }
+        }
+    }
+
+    $script:RootDir = $targetPath
+    Write-Log "Using setup repository at $targetPath" "INFO"
+    return $true
 }
 
 function Install-NpipeRelay {
