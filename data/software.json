@@ -1,23 +1,57 @@
 {
   "required": [
-    { "name": "VS Code", "id": "Microsoft.VisualStudioCode", "description": "Windows editor with WSL support" },
-    { "name": "LocalSend", "id": "LocalSend.LocalSend", "description": "local device file sharing" },
+    {
+      "name": "VS Code",
+      "id": "Microsoft.VisualStudioCode",
+      "description": "Windows editor with WSL support"
+    },
+    {
+      "name": "LocalSend",
+      "id": "LocalSend.LocalSend",
+      "description": "local device file sharing"
+    },
     { "name": "VLC", "id": "VideoLAN.VLC", "description": "media playback" },
     { "name": "Zen Browser", "id": "Zen-Team.Zen-Browser", "description": "primary browser" },
-    { "name": "PowerShell 7", "id": "Microsoft.PowerShell", "description": "Windows fallback shell" },
-    { "name": "Windows Terminal", "id": "Microsoft.WindowsTerminal", "description": "terminal host" },
-    { "name": "Bitwarden", "id": "Bitwarden.Bitwarden", "scope": "user", "fallbackId": "9PJSDV0VPK04", "fallbackSource": "msstore", "description": "password manager and SSH agent" },
+    {
+      "name": "PowerShell 7",
+      "id": "Microsoft.PowerShell",
+      "description": "Windows fallback shell"
+    },
+    {
+      "name": "Windows Terminal",
+      "id": "Microsoft.WindowsTerminal",
+      "description": "terminal host"
+    },
+    {
+      "name": "Bitwarden",
+      "id": "Bitwarden.Bitwarden",
+      "scope": "user",
+      "fallbackId": "9PJSDV0VPK04",
+      "fallbackSource": "msstore",
+      "description": "password manager and SSH agent"
+    },
     { "name": "Komorebi", "id": "LGUG2Z.komorebi", "description": "tiling window manager" },
     { "name": "whkd", "id": "LGUG2Z.whkd", "description": "Komorebi hotkeys" },
     { "name": "masir", "id": "LGUG2Z.masir", "description": "Komorebi focus helper" }
   ],
   "optional": [
-    { "name": "BCUninstaller", "id": "Klocman.BulkCrapUninstaller", "description": "bulk uninstall cleanup" },
+    {
+      "name": "BCUninstaller",
+      "id": "Klocman.BulkCrapUninstaller",
+      "description": "bulk uninstall cleanup"
+    },
     { "name": "Signal", "id": "OpenWhisperSystems.Signal", "description": "private messaging" },
-    { "name": "NVCleanInstall", "id": "TechPowerUp.NVCleanstall", "description": "lean NVIDIA driver installs" },
+    {
+      "name": "NVCleanInstall",
+      "id": "TechPowerUp.NVCleanstall",
+      "description": "lean NVIDIA driver installs"
+    },
     { "name": "7-Zip", "id": "7zip.7zip", "description": "archive handling" },
     { "name": "PowerToys", "id": "Microsoft.PowerToys", "description": "Windows power-user tools" },
-    { "name": "Raycast", "id": "9PFXXSHC64H3", "source": "msstore", "description": "launcher and productivity commands" },
-    { "name": "Windhawk", "id": "RamenSoftware.Windhawk", "description": "Windows shell customization" }
+    {
+      "name": "Windhawk",
+      "id": "RamenSoftware.Windhawk",
+      "description": "Windows shell customization"
+    }
   ]
 }
