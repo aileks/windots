@@ -54,7 +54,8 @@ function Invoke-NativeCommand {
         [string[]]$ArgumentList = @(),
         [ValidateSet("INFO", "WARN", "ERROR", "SUCCESS")]
         [string]$LogLevel = "INFO",
-        [string]$OutputPrefix = ""
+        [string]$OutputPrefix = "",
+        [switch]$NoConsole
     )
 
     $output = New-Object System.Collections.Generic.List[string]
@@ -82,7 +83,9 @@ function Invoke-NativeCommand {
             foreach ($line in @($text -split "`n")) {
                 $clean = Remove-NativeOutputFormatting -Text $line
                 $output.Add($clean)
-                Write-Host "$OutputPrefix$clean"
+                if (-not $NoConsole) {
+                    Write-Host "$OutputPrefix$clean"
+                }
                 Write-Log -Message "$OutputPrefix$clean" -Level $LogLevel -NoConsole
             }
         }
@@ -91,7 +94,9 @@ function Invoke-NativeCommand {
     } catch {
         $clean = Remove-NativeOutputFormatting -Text $_.Exception.Message
         $output.Add($clean)
-        Write-Host "$OutputPrefix$clean" -ForegroundColor Red
+        if (-not $NoConsole) {
+            Write-Host "$OutputPrefix$clean" -ForegroundColor Red
+        }
         Write-Log -Message "$OutputPrefix$clean" -Level "ERROR" -NoConsole
         $exitCode = 1
     } finally {

@@ -93,7 +93,7 @@ function Export-RegistryKey {
         if (Test-Path $Path) {
             $nativeResult = Invoke-NativeCommand -FilePath "reg.exe" -ArgumentList @(
                 "export", $nativePath, $destination, "/y"
-            )
+            ) -NoConsole
             if ($nativeResult.ExitCode -ne 0) {
                 Write-Log "Registry export failed for $nativePath with exit code $($nativeResult.ExitCode)" "ERROR"
                 return $false
@@ -120,6 +120,7 @@ function New-RegistryBackup {
     $script:RegistryBackedUpPaths = @{}
     $succeeded = $true
     $exported = 0
+    Write-Log "Backing up registry settings..." "INFO"
     foreach ($path in @($Paths | Select-Object -Unique)) {
         if (Export-RegistryKey -Path $path -BackupDirectory $backupDirectory) {
             $exported++
