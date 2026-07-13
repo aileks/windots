@@ -8,7 +8,13 @@
   "border": true,
   "border_width": 2,
   "border_offset": 0,
-  "floating_applications": [],
+  "floating_applications": [
+    {
+      "kind": "Exe",
+      "id": "XIVLauncher.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
   "object_name_change_applications": [
     {
       "kind": "Exe",
