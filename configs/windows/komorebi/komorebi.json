@@ -34,17 +34,17 @@
       "base_06": { "r": 187, "g": 179, "b": 169 },
       "base_07": { "r": 221, "g": 213, "b": 202 },
       "base_08": { "r": 179, "g": 74, "b": 69 },
-      "base_09": { "r": 200, "g": 117, "b": 70 },
+      "base_09": { "r": 225, "g": 122, "b": 63 },
       "base_0a": { "r": 217, "g": 164, "b": 65 },
       "base_0b": { "r": 135, "g": 155, "b": 92 },
       "base_0c": { "r": 88, "g": 145, "b": 140 },
       "base_0d": { "r": 103, "g": 133, "b": 161 },
       "base_0e": { "r": 154, "g": 120, "b": 143 },
-      "base_0f": { "r": 200, "g": 117, "b": 70 }
+      "base_0f": { "r": 141, "g": 85, "b": 51 }
     },
-    "single_border": "Base0D",
+    "single_border": "Base09",
     "stack_border": "Base0B",
-    "monocle_border": "Base09",
+    "monocle_border": "Base0D",
     "unfocused_border": "Base03"
   },
   "display_index_preferences": {

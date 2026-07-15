@@ -11,11 +11,11 @@ default_memory_value = true
 
 [styles.cpu]
 all_entry_color = "#d9a441"
-avg_entry_color = "#c87546"
-cpu_core_colors = ["#6785a1", "#58918c", "#879b5c", "#9a788f", "#d9a441", "#c87546", "#8d5533", "#b34a45"]
+avg_entry_color = "#e17a3f"
+cpu_core_colors = ["#6785a1", "#58918c", "#879b5c", "#9a788f", "#d9a441", "#e17a3f", "#8d5533", "#b34a45"]
 
 [styles.temp_graph]
-temp_graph_color_styles = ["#58918c", "#879b5c", "#d9a441", "#c87546", "#b34a45"]
+temp_graph_color_styles = ["#58918c", "#879b5c", "#d9a441", "#e17a3f", "#b34a45"]
 
 [styles.memory]
 ram_color = "#6785a1"

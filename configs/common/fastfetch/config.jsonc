@@ -15,39 +15,39 @@
     {
       "type": "host",
       "key": " PC",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "cpu",
       "key": "│ ├",
       "showPeCoreCount": true,
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "gpu",
       "key": "│ ├",
       "detectionMethod": "pci",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "display",
       "key": "│ ├󰄄",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "disk",
       "key": "│ ├󰃊",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "memory",
       "key": "│ ├",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "swap",
       "key": "└ └󰃡 ",
-      "keyColor": "green"
+      "keyColor": "#E17A3F"
     },
     {
       "type": "custom",
