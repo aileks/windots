@@ -7,7 +7,7 @@ win + shift + o : komorebic reload-configuration
 win + q : komorebic close
 win + shift + m : komorebic minimize
 
-win + b : $helium = @("$env:LOCALAPPDATA\imput\Helium\Application\chrome.exe", "$env:ProgramFiles\imput\Helium\Application\chrome.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1; if ($helium) { Start-Process $helium }
+win + w : $helium = @("$env:LOCALAPPDATA\imput\Helium\Application\chrome.exe", "$env:ProgramFiles\imput\Helium\Application\chrome.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1; if ($helium) { Start-Process $helium }
 win + s : Start-Process "$env:LOCALAPPDATA\Programs\signal-desktop\Signal.exe"
 win + m : Start-Process "$env:ProgramFiles\Fastmail\Fastmail.exe"
 win + t : Start-Process wt
