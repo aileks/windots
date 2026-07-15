@@ -3,7 +3,7 @@
   "monitor": 0,
   "height": 30,
   "font_family": "JetBrainsMono Nerd Font Propo",
-  "font_size": 12,
+  "font_size": 13,
   "icon_scale": 1.2,
   "padding": 4,
   "theme": {
@@ -24,9 +24,9 @@
       "base_0c": { "r": 88, "g": 145, "b": 140 },
       "base_0d": { "r": 103, "g": 133, "b": 161 },
       "base_0e": { "r": 154, "g": 120, "b": 143 },
-      "base_0f": { "r": 200, "g": 117, "b": 70 }
+      "base_0f": { "r": 141, "g": 85, "b": 51 }
     },
-    "accent": "Base09"
+    "accent": "Base0E"
   },
   "left_widgets": [
     {
