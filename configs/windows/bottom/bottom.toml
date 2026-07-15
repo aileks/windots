@@ -1,0 +1,51 @@
+[flags]
+rate = "1500ms"
+temperature_type = "celsius"
+battery = true
+show_table_scroll_bar = true
+
+[processes]
+columns = ["PID", "Name", "CPU%", "Mem%", "R/s", "W/s", "User", "State", "Time"]
+default_sort = "CPU%"
+default_memory_value = true
+
+[styles.cpu]
+all_entry_color = "#d9a441"
+avg_entry_color = "#c87546"
+cpu_core_colors = ["#6785a1", "#58918c", "#879b5c", "#9a788f", "#d9a441", "#c87546", "#8d5533", "#b34a45"]
+
+[styles.temp_graph]
+temp_graph_color_styles = ["#58918c", "#879b5c", "#d9a441", "#c87546", "#b34a45"]
+
+[styles.memory]
+ram_color = "#6785a1"
+cache_color = "#9a938a"
+swap_color = "#d9a441"
+arc_color = "#58918c"
+gpu_colors = ["#9a788f", "#6785a1", "#58918c", "#879b5c"]
+
+[styles.network]
+rx_color = "#6785a1"
+tx_color = "#58918c"
+rx_total_color = "#879b5c"
+tx_total_color = "#d9a441"
+
+[styles.battery]
+high_battery_color = "#879b5c"
+medium_battery_color = "#d9a441"
+low_battery_color = "#b34a45"
+
+[styles.tables]
+headers = { color = "#ddd5ca", bold = true }
+
+[styles.graphs]
+graph_color = "#58534c"
+legend_text = { color = "#9a938a" }
+
+[styles.widgets]
+border_color = "#58534c"
+selected_border_color = "#6785a1"
+widget_title = { color = "#ddd5ca", bold = true }
+text = { color = "#bbb3a9" }
+selected_text = { color = "#ddd5ca", bg_color = "#58534c" }
+disabled_text = { color = "#58534c" }

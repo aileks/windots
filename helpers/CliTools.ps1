@@ -32,27 +32,14 @@ function Initialize-WindowsCliToolConfigs {
         return $false
     }
 
-    $btop = Get-Command btop -ErrorAction SilentlyContinue
-    if (-not $btop) {
-        Write-Log "btop unavailable for config setup" "ERROR"
+    $bottom = Get-Command btm -ErrorAction SilentlyContinue
+    if (-not $bottom) {
+        Write-Log "bottom unavailable for config setup" "ERROR"
         return $false
     }
 
-    $btopPath = $btop.Source
-    $btopCommandItem = Get-Item -LiteralPath $btopPath -Force
-    if ($btopCommandItem.LinkType -eq "SymbolicLink") {
-        $target = [string](@($btopCommandItem.Target) | Select-Object -First 1)
-        if (-not [IO.Path]::IsPathRooted($target)) {
-            $target = Join-Path (Split-Path $btopPath -Parent) $target
-        }
-        if (Test-Path -LiteralPath $target) { $btopPath = $target }
-    }
-
-    $btopConfigDir = Split-Path $btopPath -Parent
-    New-ConfigLink "$script:RootDir/configs/common/btop/btop.conf" (Join-Path $btopConfigDir "btop.conf")
-    Get-ChildItem "$script:RootDir/configs/common/btop/themes" -File | ForEach-Object {
-        New-ConfigLink $_.FullName (Join-Path $btopConfigDir "themes/$($_.Name)")
-    }
+    $bottomConfig = Join-Path $env:APPDATA "bottom/bottom.toml"
+    New-ConfigLink "$script:RootDir/configs/windows/bottom/bottom.toml" $bottomConfig
 
     Write-Log "CLI tool configs linked" "SUCCESS"
     return $true

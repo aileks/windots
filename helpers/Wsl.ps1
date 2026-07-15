@@ -190,7 +190,6 @@ function Copy-WslConfigPayload {
         @{ Source = "configs\wsl\nvim"; Relative = "nvim" }
         @{ Source = "configs\common\starship\starship.toml"; Relative = "starship\starship.toml" }
         @{ Source = "configs\common\bat"; Relative = "bat" }
-        @{ Source = "configs\common\btop"; Relative = "btop" }
     )
 
     try {

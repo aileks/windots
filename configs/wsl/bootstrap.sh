@@ -25,7 +25,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 # CLI subset from https://github.com/aileks/dotfiles/blob/main/setup.sh
 apt-get install -y \
-  7zip bat btop build-essential ca-certificates curl eza fastfetch fd-find ffmpeg \
+  7zip bat build-essential ca-certificates curl eza fastfetch fd-find ffmpeg \
   fontconfig fzf git iproute2 jq less neovim openssh-client python3 ripgrep shellcheck \
   shfmt socat starship trash-cli unzip wget xz-utils zoxide zsh zsh-antidote
 
@@ -47,7 +47,11 @@ backup_and_link "$config_root/zsh/zshrc" "$home_dir/.zshrc"
 backup_and_link "$config_root/nvim" "$home_dir/.config/nvim"
 backup_and_link "$config_root/starship/starship.toml" "$home_dir/.config/starship.toml"
 backup_and_link "$config_root/bat" "$home_dir/.config/bat"
-backup_and_link "$config_root/btop" "$home_dir/.config/btop"
+
+btop_config="$home_dir/.config/btop"
+if [[ -L $btop_config && $(readlink "$btop_config") == "$config_root/btop" ]]; then
+  rm -f "$btop_config"
+fi
 
 command -v bat >/dev/null 2>&1 || ln -sfn /usr/bin/batcat "$home_dir/.local/bin/bat"
 command -v fd >/dev/null 2>&1 || ln -sfn /usr/bin/fdfind "$home_dir/.local/bin/fd"
@@ -78,7 +82,7 @@ install -m 0644 "$config_root/wsl/wsl.conf" /etc/wsl.conf
 
 chown -h "$linux_user:$linux_user" \
   "$home_dir/.zshrc" "$home_dir/.config/nvim" "$home_dir/.config/starship.toml" \
-  "$home_dir/.config/bat" "$home_dir/.config/btop" "$home_dir/.local/bin"/* 2>/dev/null || true
+  "$home_dir/.config/bat" "$home_dir/.local/bin"/* 2>/dev/null || true
 chsh -s /usr/bin/zsh "$linux_user"
 
 for setting in \
