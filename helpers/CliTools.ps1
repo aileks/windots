@@ -26,7 +26,7 @@ function Initialize-WindowsCliToolConfigs {
     Get-ChildItem "$script:RootDir/configs/common/bat/themes" -File | ForEach-Object {
         New-ConfigLink $_.FullName (Join-Path $batConfigDir "themes/$($_.Name)")
     }
-    New-ConfigLink "$script:RootDir/configs/common/fastfetch" "$env:USERPROFILE\.config\fastfetch"
+    New-ConfigLink "$script:RootDir/configs/windows/fastfetch" "$env:USERPROFILE\.config\fastfetch"
     $batCacheResult = Invoke-NativeCommand -FilePath $bat.Source -ArgumentList @("cache", "--build") -NoConsole
     if ($batCacheResult.ExitCode -ne 0) {
         Write-Log "bat theme cache failed" "ERROR"

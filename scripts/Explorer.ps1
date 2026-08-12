@@ -60,7 +60,7 @@ function Invoke-ExplorerTweaks {
             "TaskbarMn"                     = @{ Value = 0 }
             "ShowTaskViewButton"            = @{ Value = 0 }
             "ShowCopilotButton"             = @{ Value = 0 }
-            "DisabledHotkeys"               = @{ Value = "hjklqmotpxynf1234567"; Type = "String" }
+            "DisabledHotkeys"               = @{ Value = "hjklqmotpxynf12345678"; Type = "String" }
         }
         "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" = @{
             "TaskbarEndTask" = @{ Value = 1 }

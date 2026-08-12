@@ -37,7 +37,7 @@ if (-not (Ask-YesNo "Continue with setup?" $false)) {
     Write-Host "Setup cancelled" -ForegroundColor Yellow
     exit 0
 }
-$setupWsl = Ask-YesNo "Set up WSL and Ubuntu?" $true
+$setupWsl = Ask-YesNo "Set up WSL and Arch Linux?" $true
 
 $stateDir = "$env:USERPROFILE\.dotfiles-state"
 $stateFile = "$stateDir\state.json"
@@ -86,7 +86,7 @@ $actions = @(
     [PSCustomObject]@{ Id = "windows-cli"; Name = "PowerShell CLI tools"; Run = { Invoke-CliToolsInstall } },
     [PSCustomObject]@{ Id = "nerd-fonts"; Name = "Nerd fonts"; Run = { Invoke-NerdFontSetup } },
     [PSCustomObject]@{ Id = "npiperelay"; Name = "Bitwarden SSH relay"; Wsl = $true; Prerequisite = { Test-BitwardenInstalled }; PrerequisiteMessage = "Bitwarden is not installed"; Run = { Install-NpipeRelay } },
-    [PSCustomObject]@{ Id = "ubuntu-environment"; Name = "Ubuntu environment"; Wsl = $true; Run = {
+    [PSCustomObject]@{ Id = "arch-environment"; Name = "Arch Linux environment"; Wsl = $true; Run = {
         $relayPath = Join-Path $env:LOCALAPPDATA "Programs\npiperelay\npiperelay.exe"
         if (-not ((Test-BitwardenInstalled) -and (Test-Path -LiteralPath $relayPath))) { $relayPath = "" }
         Invoke-WslBootstrap -RelayPath $relayPath

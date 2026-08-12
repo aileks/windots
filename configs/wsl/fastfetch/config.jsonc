@@ -14,40 +14,35 @@
     },
     {
       "type": "host",
-      "key": " PC",
-      "keyColor": "#E17A3F"
+      "key": " PC",
+      "keyColor": "green"
     },
     {
       "type": "cpu",
       "key": "│ ├",
       "showPeCoreCount": true,
-      "keyColor": "#E17A3F"
+      "keyColor": "green"
     },
     {
       "type": "gpu",
       "key": "│ ├",
       "detectionMethod": "pci",
-      "keyColor": "#E17A3F"
-    },
-    {
-      "type": "display",
-      "key": "│ ├󰄄",
-      "keyColor": "#E17A3F"
+      "keyColor": "green"
     },
     {
       "type": "disk",
-      "key": "│ ├󰃊",
-      "keyColor": "#E17A3F"
+      "key": "│ ├󰋊",
+      "keyColor": "green"
     },
     {
       "type": "memory",
-      "key": "│ ├",
-      "keyColor": "#E17A3F"
+      "key": "│ ├",
+      "keyColor": "green"
     },
     {
       "type": "swap",
-      "key": "└ └󰃡 ",
-      "keyColor": "#E17A3F"
+      "key": "└ └󰓡 ",
+      "keyColor": "green"
     },
     {
       "type": "custom",
@@ -70,49 +65,13 @@
     },
     {
       "type": "packages",
-      "key": "│ ├󰃶",
+      "key": "│ ├󰏖",
       "keyColor": "yellow"
     },
     {
       "type": "shell",
       "key": "└ └",
       "keyColor": "yellow"
-    },
-    "break",
-    {
-      "type": "de",
-      "key": "󰇄 DE",
-      "keyColor": "blue"
-    },
-    {
-      "type": "wm",
-      "key": "│ ├",
-      "keyColor": "blue"
-    },
-    {
-      "type": "wmtheme",
-      "key": "│ ├󰁼",
-      "keyColor": "blue"
-    },
-    {
-      "type": "icons",
-      "key": "│ ├󰀻",
-      "keyColor": "blue"
-    },
-    {
-      "type": "cursor",
-      "key": "│ ├",
-      "keyColor": "blue"
-    },
-    {
-      "type": "terminalfont",
-      "key": "│ ├",
-      "keyColor": "blue"
-    },
-    {
-      "type": "terminal",
-      "key": "└ └",
-      "keyColor": "blue"
     },
     {
       "type": "custom",

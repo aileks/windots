@@ -13,11 +13,10 @@
       "role": "terminal"
     },
     {
-      "name": "JetBrains Mono",
-      "package": "JetBrainsMono-NF-Propo",
-      "installedFile": "JetBrainsMonoNerdFontPropo-Regular.ttf",
-      "monoFace": "JetBrainsMono NFM",
-      "propoFace": "JetBrainsMono Nerd Font Propo",
+      "name": "Adwaita Mono Proportional",
+      "package": "AdwaitaMono-NF-Propo",
+      "installedFile": "AdwaitaMonoNerdFontPropo-Regular.ttf",
+      "propoFace": "AdwaitaMono Nerd Font Propo",
       "role": "komorebi"
     }
   ]

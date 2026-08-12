@@ -2,7 +2,7 @@ function Set-ObjectProperty {
     param(
         [Parameter(Mandatory)]$Object,
         [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)]$Value
+        [Parameter(Mandatory)][AllowNull()][AllowEmptyCollection()]$Value
     )
     $Object | Add-Member -NotePropertyName $Name -NotePropertyValue $Value -Force
 }
@@ -31,6 +31,20 @@ function Invoke-WindowsTerminalSetup {
     Set-ObjectProperty $settings "showTabsInTitlebar" $false
     Set-ObjectProperty $settings "showTabsFullscreen" $false
 
+    $shiftEnterId = "Windots.ShiftEnter"
+    $managedShiftEnter = @($managed.actions | Where-Object { $_.id -eq $shiftEnterId }) | Select-Object -First 1
+    $managedShiftEnterKey = @($managed.keybindings | Where-Object { $_.id -eq $shiftEnterId }) | Select-Object -First 1
+    $actions = @($settings.actions | Where-Object {
+        $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
+    })
+    $keybindings = @($settings.keybindings | Where-Object {
+        $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
+    })
+    if ($managedShiftEnter -and $managedShiftEnterKey) {
+        Set-ObjectProperty $settings "actions" @($actions + $managedShiftEnter)
+        Set-ObjectProperty $settings "keybindings" @($keybindings + $managedShiftEnterKey)
+    }
+
     $schemes = @($settings.schemes | Where-Object { $_.name -notin @("Ashen", "Cinder Grove") })
     Set-ObjectProperty $settings "schemes" @($schemes + $managed.schemes[0])
 
@@ -44,13 +58,12 @@ function Invoke-WindowsTerminalSetup {
     if (-not $monoFontFace) { $monoFontFace = "AdwaitaMono Nerd Font Mono" }
     Set-ObjectProperty $defaults "font" ([PSCustomObject]@{ face = $monoFontFace; size = 13 })
 
-    $legacyProfileGuid = "{a1d66d88-5f1f-4b6d-a7df-9c768f5bf278}"
-    if ($settings.profiles.PSObject.Properties.Name -contains "list") {
-        $profiles = @($settings.profiles.list | Where-Object { $_.guid -ne $legacyProfileGuid })
-        Set-ObjectProperty $settings.profiles "list" $profiles
-    }
-    if ($settings.defaultProfile -eq $legacyProfileGuid) {
-        $settings.PSObject.Properties.Remove("defaultProfile")
+    $archInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
+        (@(Get-WslDistroNames) -contains "archlinux")
+    if ($archInstalled) {
+        # WSL generates the profile. Selecting it by distro name avoids adding
+        # a second, manually managed Arch profile.
+        Set-ObjectProperty $settings "defaultProfile" "archlinux"
     }
     if (@($settings.disabledProfileSources) -contains "Windows.Terminal.Wsl") {
         $disabledSources = @($settings.disabledProfileSources | Where-Object { $_ -ne "Windows.Terminal.Wsl" })

@@ -1,21 +1,20 @@
-# Windows Setup
+# Windows 11 Setup
 
 Opinionated setup for Windows 11 24H2+. Use at your own risk.
 
-## Usage
+## Install
+
+Run from an elevated Windows PowerShell session:
 
 ```powershell
 irm https://aileks.dev/win | iex
 ```
 
-Or manually:
+Or clone and run it manually:
 
 ```powershell
 git clone https://codeberg.org/aileks/windots.git "$env:USERPROFILE\.dotfiles"
 Set-Location "$env:USERPROFILE\.dotfiles"
-
 Set-ExecutionPolicy Bypass -Scope Process
 .\setup.ps1
 ```
-
-The setup prompts separately for WSL and Ubuntu. Decline that prompt to continue with Windows setup only.

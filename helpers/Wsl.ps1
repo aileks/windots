@@ -1,4 +1,4 @@
-$script:WslDistro = "Ubuntu"
+$script:WslDistro = "archlinux"
 $script:NpipeRelayVersion = "1.11.4"
 $script:NpipeRelaySha256 = "cea82cf5c9c22a28bef8075750acb7958f766393baebff4597cf21442f71c4b3"
 
@@ -15,7 +15,7 @@ function Test-WslPlatformEnabled {
 function Enable-WslPlatformAndReboot {
     Register-ResumeAfterReboot -ScriptPath $script:SetupScript
     Write-Log "Installing WSL" "INFO"
-    $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--install")
+    $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--install", "--no-distribution")
     if ($result.ExitCode -ne 0) {
         Clear-ResumeAfterReboot
         Write-Log "WSL enablement failed: exit $($result.ExitCode)" "ERROR"
@@ -38,54 +38,46 @@ function Test-WslDistroInstalled {
     @(Get-WslDistroNames) -contains $script:WslDistro
 }
 
-function Resolve-WslDistro {
-    $names = @(Get-WslDistroNames)
-    if ("Ubuntu" -notin $names) { return $false }
-
-    $script:WslDistro = "Ubuntu"
-    Set-StateValue "selectedWslDistro" $script:WslDistro
-    Write-Log "Ubuntu found: $script:WslDistro" "INFO"
-    return $true
-}
-
 function Install-WslDistro {
-    if (Resolve-WslDistro) { return $true }
+    if (Test-WslDistroInstalled) {
+        Set-StateValue "selectedWslDistro" $script:WslDistro
+        Write-Log "Arch Linux exists" "INFO"
+        return $true
+    }
 
-    Write-Log "Installing Ubuntu" "INFO"
-    $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--install")
+    Write-Log "Installing Arch Linux" "INFO"
+    $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
+        "--install", "--distribution", $script:WslDistro, "--no-launch"
+    )
     if ($result.ExitCode -ne 0) {
-        Write-Log "Ubuntu install failed: exit $($result.ExitCode)" "ERROR"
+        Write-Log "Arch Linux install failed: exit $($result.ExitCode)" "ERROR"
         return $false
     }
-    if (-not (Resolve-WslDistro)) {
-        Write-Log "Ubuntu unavailable after installation" "ERROR"
+    if (-not (Test-WslDistroInstalled)) {
+        Write-Log "Arch Linux unavailable after installation" "ERROR"
         return $false
     }
+    Set-StateValue "selectedWslDistro" $script:WslDistro
     return $true
 }
 
 function Get-WslDefaultUser {
     if (-not (Test-WslDistroInstalled)) { return "" }
 
-    # Read the registered UID before invoking the distro. Calling `wsl --exec`
-    # against an uninitialized distro can consume its first launch as root and
-    # bypass the interactive Ubuntu user-creation flow we need to show.
-    try {
-        $registrations = @(Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss" -ErrorAction Stop)
-        $registration = $registrations | ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction Stop } | `
-            Where-Object { $_.DistributionName -eq $script:WslDistro } | `
-            Select-Object -First 1
-    } catch {
-        Write-Log "Ubuntu registration failed: $($_.Exception.Message)" "WARN"
-        return ""
+    $storedUser = [string](Get-StateValue "selectedWslUser")
+    if (-not [string]::IsNullOrWhiteSpace($storedUser)) {
+        $storedResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
+            "--distribution", $script:WslDistro, "--user", "root", "--exec", "id", "--user", $storedUser
+        ) -NoConsole
+        if ($storedResult.ExitCode -eq 0) { return $storedUser }
     }
-    if ($null -eq $registration -or $null -eq $registration.DefaultUid) { return "" }
-    $defaultUid = [uint32]$registration.DefaultUid
-    if ($defaultUid -eq 0) { return "" }
 
+    # The official Arch image starts as root. UID 1000 is the user created by
+    # this installer and lets an interrupted setup resume without prompting.
     $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
-        "--distribution", $script:WslDistro, "--user", "root", "--exec", "id", "-un", $defaultUid
-    )
+        "--distribution", $script:WslDistro, "--user", "root", "--exec",
+        "sh", "-lc", "getent passwd 1000 | cut -d: -f1"
+    ) -NoConsole
     if ($result.ExitCode -ne 0) { return "" }
     $outputLines = @($result.Output | ForEach-Object { ([string]$_).Trim() } | Where-Object { $_ })
     $lastLine = $outputLines | Select-Object -Last 1
@@ -110,11 +102,11 @@ function Test-WslUserPasswordSet {
 function Set-WslUserPassword {
     param([Parameter(Mandatory)][string]$User)
 
-    Write-Host "Set Ubuntu password for $User" -ForegroundColor Yellow
+    Write-Host "Set Arch Linux password for $User" -ForegroundColor Yellow
     & wsl.exe --distribution $script:WslDistro --user root --exec passwd $User
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne 0) {
-        Write-Log "Ubuntu password setup failed: exit $exitCode" "ERROR"
+        Write-Log "Arch Linux password setup failed: exit $exitCode" "ERROR"
         return $false
     }
     return Test-WslUserPasswordSet -User $User
@@ -122,29 +114,32 @@ function Set-WslUserPassword {
 
 function Initialize-WslUser {
     $user = Get-WslDefaultUser
-    if ($user) {
-        if (-not (Test-WslUserPasswordSet -User $user) -and -not (Set-WslUserPassword -User $user)) {
+    if (-not $user) {
+        $defaultUser = $env:USERNAME.ToLowerInvariant() -replace '[^a-z0-9_-]', ''
+        if ($defaultUser -notmatch '^[a-z_]') { $defaultUser = "user$defaultUser" }
+        if ($defaultUser.Length -gt 32) { $defaultUser = $defaultUser.Substring(0, 32) }
+
+        while ($true) {
+            $user = Ask-Input "Arch Linux username" $defaultUser
+            if ($user -match '^[a-z_][a-z0-9_-]{0,31}$' -and $user -ne "root") { break }
+            Write-Host "Use 1-32 lowercase letters, numbers, underscores, or hyphens; do not use root." `
+                -ForegroundColor Yellow
+        }
+
+        $createResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
+            "--distribution", $script:WslDistro, "--user", "root", "--exec",
+            "useradd", "--create-home", "--groups", "wheel", "--shell", "/bin/bash", $user
+        )
+        if ($createResult.ExitCode -ne 0) {
+            Write-Log "Arch Linux user creation failed: exit $($createResult.ExitCode)" "ERROR"
             return ""
         }
-        return $user
     }
 
-    Write-Host "Create Ubuntu user, then exit" -ForegroundColor Yellow
-    & wsl.exe --distribution $script:WslDistro
-    $exitCode = $LASTEXITCODE
-    if ($exitCode -ne 0) {
-        Write-Log "Ubuntu first run failed: exit $exitCode" "ERROR"
-        return ""
-    }
-
-    $user = Get-WslDefaultUser
-    if ([string]::IsNullOrWhiteSpace($user)) {
-        Write-Log "Ubuntu user incomplete" "ERROR"
-        return ""
-    }
     if (-not (Test-WslUserPasswordSet -User $user) -and -not (Set-WslUserPassword -User $user)) {
         return ""
     }
+    Set-StateValue "selectedWslUser" $user
     return $user
 }
 
@@ -152,7 +147,7 @@ function ConvertTo-WslPath {
     param([Parameter(Mandatory)][string]$WindowsPath)
 
     $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
-        "--distribution", $script:WslDistro, "--exec", "wslpath", "-u", $WindowsPath
+        "--distribution", $script:WslDistro, "--user", "root", "--exec", "wslpath", "-u", $WindowsPath
     )
     if ($result.ExitCode -ne 0) { return "" }
     (($result.Output | Select-Object -First 1) -as [string]).Trim()
@@ -176,7 +171,7 @@ function Copy-WslConfigPayload {
 
     $uncHome = "\\wsl.localhost\$script:WslDistro\home\$LinuxUser"
     if (-not (Test-Path -LiteralPath $uncHome)) {
-        Write-Log "Ubuntu home unavailable: $uncHome" "ERROR"
+        Write-Log "Arch Linux home unavailable: $uncHome" "ERROR"
         return $null
     }
 
@@ -188,7 +183,9 @@ function Copy-WslConfigPayload {
         @{ Source = "configs\wsl\wsl.conf"; Relative = "wsl\wsl.conf" }
         @{ Source = "configs\wsl\bitwarden-ssh-agent.zsh"; Relative = "wsl\bitwarden-ssh-agent.zsh" }
         @{ Source = "configs\wsl\nvim"; Relative = "nvim" }
-        @{ Source = "configs\common\fastfetch"; Relative = "fastfetch" }
+        @{ Source = "configs\wsl\tmux"; Relative = "tmux" }
+        @{ Source = "configs\wsl\btop"; Relative = "btop" }
+        @{ Source = "configs\wsl\fastfetch"; Relative = "fastfetch" }
         @{ Source = "configs\common\starship\starship.toml"; Relative = "starship\starship.toml" }
         @{ Source = "configs\common\bat"; Relative = "bat" }
     )
@@ -273,7 +270,7 @@ function Invoke-WslBootstrap {
     New-ConfigLink "$script:RootDir/configs/wsl/.wslconfig" "$env:USERPROFILE\.wslconfig"
     if (-not (Install-WslDistro)) { return $false }
 
-    # Applying .wslconfig requires all WSL instances to stop before Ubuntu is
+    # Applying .wslconfig requires all WSL instances to stop before Arch Linux is
     # relaunched. A non-zero shutdown here is reported but does not prevent the
     # first-run experience from repairing an otherwise healthy installation.
     $initialShutdown = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--shutdown")
@@ -308,7 +305,7 @@ function Invoke-WslBootstrap {
             Write-Log "Bitwarden relay unavailable" "WARN"
         }
 
-        Write-Log "Configuring Ubuntu" "INFO"
+        Write-Log "Configuring Arch Linux" "INFO"
         $bootstrapPath = "$configRoot/wsl/bootstrap.sh"
         $bootstrapArguments = @(
             "--distribution", $script:WslDistro, "--user", "root", "--exec",
@@ -316,22 +313,19 @@ function Invoke-WslBootstrap {
         )
         $bootstrapResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList $bootstrapArguments
         if ($bootstrapResult.ExitCode -ne 0) {
-            $bootstrapText = @($bootstrapResult.Output) -join "`n"
-            if ($bootstrapText -match '(?im)Release file(?: for)? .* is not valid yet') {
-                Write-Log "Ubuntu clock skew detected" "WARN"
-                $terminateResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--terminate", $script:WslDistro)
-                if ($terminateResult.ExitCode -ne 0) {
-                    Write-Log "Ubuntu restart failed: exit $($terminateResult.ExitCode)" "WARN"
-                }
-                $bootstrapResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList $bootstrapArguments
-            }
-        }
-        if ($bootstrapResult.ExitCode -ne 0) {
-            Write-Log "Ubuntu setup failed: exit $($bootstrapResult.ExitCode)" "ERROR"
+            Write-Log "Arch Linux setup failed: exit $($bootstrapResult.ExitCode)" "ERROR"
             return $false
         }
 
-        Write-Log "Ubuntu configured" "SUCCESS"
+        $defaultResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
+            "--set-default", $script:WslDistro
+        )
+        if ($defaultResult.ExitCode -ne 0) {
+            Write-Log "Arch Linux default distro setup failed: exit $($defaultResult.ExitCode)" "ERROR"
+            return $false
+        }
+
+        Write-Log "Arch Linux configured" "SUCCESS"
         return $true
     } finally {
         $shutdownResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--shutdown")

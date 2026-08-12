@@ -6,6 +6,7 @@ export EDITOR="nvim"
 export VISUAL="$EDITOR"
 export SUDO_EDITOR="$VISUAL"
 export MANPAGER='bat --theme="cinder-grove" -plman'
+export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock"
 [[ -r "$HOME/.config/windows-setup-script/bitwarden-ssh-agent.zsh" ]] && \
   source "$HOME/.config/windows-setup-script/bitwarden-ssh-agent.zsh"
 bindkey -e
@@ -39,7 +40,6 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_VERIFY
 setopt SHARE_HISTORY
-setopt INC_APPEND_HISTORY
 
 # Completion: case-insensitive + partial-word + substring
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
@@ -53,6 +53,7 @@ alias c="clear"
 alias fzf="fzf --style full"
 alias ff="fastfetch"
 alias vim="nvim"
+alias docker="podman"
 
 # FZF
 export FZF_CTRL_T_OPTS="
@@ -63,19 +64,19 @@ export FZF_ALT_C_OPTS="
   --walker-skip .git,node_modules,target
   --preview 'eza --tree --color=always --icons {}'"
 export FZF_DEFAULT_OPTS="
-  --color=fg:#BBB3A9
+  --color=fg:#ACA49B
   --color=fg+:#DDD5CA
   --color=bg:#131210
   --color=bg+:#34312d
-  --color=hl:#E17A3F
-  --color=hl+:#D9A441
-  --color=info:#9A938A
-  --color=marker:#E17A3F
-  --color=prompt:#E17A3F
+  --color=hl:#C87546
+  --color=hl+:#E8A64D
+  --color=info:#ACA49B
+  --color=marker:#C87546
+  --color=prompt:#C87546
   --color=spinner:#DC8853
   --color=pointer:#D9A441
   --color=header:#B34A45
-  --color=border:#E17A3F
+  --color=border:#ACA49B
   --color=query:#DDD5CA
   --color=gutter:#131210
   --highlight-line
@@ -105,3 +106,6 @@ fi
 source <(fzf --zsh)
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
+
+export NVM_DIR="$HOME/.nvm"
+[[ -s /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh

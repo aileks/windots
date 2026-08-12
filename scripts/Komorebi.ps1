@@ -36,6 +36,15 @@ function Invoke-KomorebiSetup {
         return $false
     }
 
+    $nativeResult = Invoke-NativeCommand -FilePath "komorebic" -ArgumentList @(
+        "check", "--komorebi-config", $komorebiConfig
+    )
+    if ($nativeResult.ExitCode -ne 0) {
+        Write-Log "Komorebi configuration check failed" "ERROR"
+        return $false
+    }
+    Write-Log "Komorebi configuration valid" "SUCCESS"
+
     $nativeResult = Invoke-NativeCommand -FilePath "komorebic" -ArgumentList @("fetch-asc")
     if ($nativeResult.ExitCode -ne 0) { return $false }
     Write-Log "Komorebi apps fetched" "INFO"

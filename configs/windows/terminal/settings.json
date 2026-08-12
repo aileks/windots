@@ -3,6 +3,19 @@
   "alwaysShowTabs": false,
   "showTabsInTitlebar": false,
   "showTabsFullscreen": false,
+  "defaultProfile": "PowerShell",
+  "actions": [
+    {
+      "command": { "action": "sendInput", "input": "\u000a" },
+      "id": "Windots.ShiftEnter"
+    }
+  ],
+  "keybindings": [
+    {
+      "id": "Windots.ShiftEnter",
+      "keys": "shift+enter"
+    }
+  ],
   "schemes": [
     {
       "name": "Cinder Grove",
@@ -32,12 +45,12 @@
     "defaults": {
       "colorScheme": "Cinder Grove",
       "useAcrylic": true,
-      "opacity": 90,
+      "opacity": 95,
       "font": {
         "face": "AdwaitaMono Nerd Font Mono",
         "size": 13
       },
-      "padding": "12",
+      "padding": "10",
       "cursorShape": "filledBox"
     }
   }
