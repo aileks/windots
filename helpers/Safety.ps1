@@ -3,7 +3,8 @@ function Get-SafetyMilestones {
     $milestones = @{}
     if ($value -is [hashtable]) {
         foreach ($key in $value.Keys) { $milestones[$key] = $value[$key] }
-    } elseif ($null -ne $value) {
+    }
+    elseif ($null -ne $value) {
         $value.PSObject.Properties | ForEach-Object { $milestones[$_.Name] = $_.Value }
     }
     $milestones
@@ -41,15 +42,16 @@ function Enable-SetupSystemRestore {
         if ($null -eq (Get-StateValue "systemRestoreFrequencyOriginal")) {
             $valueState = Get-RegistryValueState -Path $path -Name $name
             Set-StateValue "systemRestoreFrequencyOriginal" ([PSCustomObject]@{
-                existed = $valueState.Exists
-                value   = $valueState.Value
-            })
+                    existed = $valueState.Exists
+                    value   = $valueState.Value
+                })
         }
         if (-not (Test-Path $path)) { New-Item -Path $path -Force | Out-Null }
         New-ItemProperty -Path $path -Name $name -Value 0 -PropertyType DWord -Force | Out-Null
         Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction Stop
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Restore setup failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -63,11 +65,13 @@ function Restore-SystemRestoreFrequency {
     try {
         if ($original.existed -eq $true) {
             New-ItemProperty -Path $path -Name $name -Value ([int]$original.value) -PropertyType DWord -Force | Out-Null
-        } elseif ((Get-RegistryValueState -Path $path -Name $name).Exists) {
+        }
+        elseif ((Get-RegistryValueState -Path $path -Name $name).Exists) {
             Remove-ItemProperty -Path $path -Name $name -ErrorAction SilentlyContinue
         }
         Remove-StateValue "systemRestoreFrequencyOriginal"
-    } catch {
+    }
+    catch {
         Write-Log "Restore frequency failed: $($_.Exception.Message)" "WARN"
     }
 }
@@ -87,10 +91,12 @@ function New-SetupRestorePoint {
         Set-SafetyMilestone $Milestone @{ description = $Description }
         Write-Log "Restore point created: $Description" "SUCCESS"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Restore point failed: $Description - $($_.Exception.Message)" "ERROR"
         return $false
-    } finally {
+    }
+    finally {
         Restore-SystemRestoreFrequency
     }
 }

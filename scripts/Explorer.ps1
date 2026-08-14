@@ -23,8 +23,9 @@ function Set-ExplorerFolderDefaults {
             [IO.File]::WriteAllText($importFile, $content, [Text.Encoding]::Unicode)
             $import = Invoke-NativeCommand -FilePath "reg.exe" -ArgumentList @("import", $importFile, "/reg:64") -NoConsole
             if ($import.ExitCode -ne 0) { throw "could not import per-user FolderTypes" }
-        } finally {
-            Remove-Item -LiteralPath $tempFile,$importFile -Force -ErrorAction SilentlyContinue
+        }
+        finally {
+            Remove-Item -LiteralPath $tempFile, $importFile -Force -ErrorAction SilentlyContinue
         }
 
         $folderTypes = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderTypes"
@@ -41,7 +42,8 @@ function Set-ExplorerFolderDefaults {
         }
         Write-Log "Explorer folders configured" "SUCCESS"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Explorer folders failed: $($_.Exception.Message)" "WARN"
         return $false
     }
@@ -50,12 +52,12 @@ function Set-ExplorerFolderDefaults {
 function Invoke-ExplorerTweaks {
     Write-Log "Configuring Explorer" "INFO"
     $ok = Set-RegistryBatch @{
-        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" = @{
+        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"                          = @{
             "HideFileExt"                   = @{ Value = 0 }
             "Hidden"                        = @{ Value = 1 }
             "ShowSyncProviderNotifications" = @{ Value = 0 }
             "ShowRecentFiles"               = @{ Value = 0 }
-            "ShowFrequentFiles"              = @{ Value = 0 }
+            "ShowFrequentFiles"             = @{ Value = 0 }
             "TaskbarAl"                     = @{ Value = 1 }
             "TaskbarMn"                     = @{ Value = 0 }
             "ShowTaskViewButton"            = @{ Value = 0 }
@@ -65,19 +67,19 @@ function Invoke-ExplorerTweaks {
         "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" = @{
             "TaskbarEndTask" = @{ Value = 1 }
         }
-        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" = @{
+        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search"                                     = @{
             "SearchboxTaskbarMode" = @{ Value = 0 }
         }
-        "HKLM:\SOFTWARE\Policies\Microsoft\Dsh" = @{
+        "HKLM:\SOFTWARE\Policies\Microsoft\Dsh"                                                      = @{
             "AllowNewsAndInterests" = @{ Value = 0 }
         }
-        "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" = @{
+        "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer"                                         = @{
             "DisableSearchBoxSuggestions" = @{ Value = 1 }
         }
-        "HKCU:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" = @{
+        "HKCU:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"                                   = @{
             "TurnOffWindowsCopilot" = @{ Value = 1 }
         }
-        "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" = @{
+        "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"                                   = @{
             "AllowCortana"             = @{ Value = 0 }
             "AllowCloudSearch"         = @{ Value = 0 }
             "AllowSearchToUseLocation" = @{ Value = 1 }
@@ -87,7 +89,7 @@ function Invoke-ExplorerTweaks {
     }
 
     if (-not (Set-RegistrySafe -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" `
-        -Name "(Default)" -Value "" -Type String -PassThru)) { $ok = $false }
+                -Name "(Default)" -Value "" -Type String -PassThru)) { $ok = $false }
     if (-not (Set-ExplorerFolderDefaults)) { $ok = $false }
 
     $stuckRectsPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
@@ -97,8 +99,10 @@ function Invoke-ExplorerTweaks {
         if ($settings -and $settings.Length -gt 8) {
             $settings[8] = 3
             Set-ItemProperty -Path $stuckRectsPath -Name Settings -Value ([byte[]]$settings)
-        } else { throw "taskbar auto-hide settings were missing or malformed" }
-    } catch {
+        }
+        else { throw "taskbar auto-hide settings were missing or malformed" }
+    }
+    catch {
         Write-Log "Taskbar auto-hide failed: $($_.Exception.Message)" "WARN"
         $ok = $false
     }

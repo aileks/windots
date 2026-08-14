@@ -33,9 +33,9 @@ function Show-SetupResults {
     Write-Host "Setup results" -ForegroundColor White
     foreach ($result in $Results) {
         $color = switch ($result.Status) {
-            "Failed"  { "Red" }
+            "Failed" { "Red" }
             "Success" { "Green" }
-            default   { "Yellow" }
+            default { "Yellow" }
         }
         $detail = if ($result.Message) { " - $($result.Message)" } else { "" }
         Write-Host ("  [{0}] {1}{2}" -f $result.Status, $result.Name, $detail) -ForegroundColor $color
@@ -46,7 +46,8 @@ function Show-SetupResults {
                 $packageDetail = ""
                 if ($package.Status -eq "Failed") {
                     $packageDetail = " (exit $($package.ExitCode), verified: $($package.Verified))"
-                } elseif ($package.Status -eq "Skipped") {
+                }
+                elseif ($package.Status -eq "Skipped") {
                     $packageDetail = " (already installed)"
                 }
                 Write-Host ("      [{0}] {1} [{2}]{3}" -f $package.Status, $package.Name, $package.Id, $packageDetail) -ForegroundColor $packageColor

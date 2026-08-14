@@ -51,10 +51,12 @@ function Ensure-Scoop {
             return $false
         }
         Refresh-EnvironmentPath
-    } catch {
+    }
+    catch {
         Write-Log "Scoop failed: $($_.Exception.Message)" "ERROR"
         return $false
-    } finally {
+    }
+    finally {
         if (Test-Path -LiteralPath $tempDir) {
             Remove-Item -LiteralPath $tempDir -Recurse -Force
         }
@@ -85,7 +87,8 @@ function Ensure-ScoopBucket {
 
     $scoopRoot = if ([string]::IsNullOrWhiteSpace($env:SCOOP)) {
         Join-Path $env:USERPROFILE "scoop"
-    } else {
+    }
+    else {
         $env:SCOOP
     }
     $bucketPath = Join-Path $scoopRoot "buckets\$Name"
@@ -126,8 +129,8 @@ function Install-ScoopNerdFont {
     $fontFile = Join-Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" $Font.installedFile
     $registryName = "$([IO.Path]::GetFileNameWithoutExtension($Font.installedFile)) (TrueType)"
     $registeredPath = (Get-RegistryValueState `
-        -Path "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts" `
-        -Name $registryName).Value
+            -Path "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts" `
+            -Name $registryName).Value
     if ((Test-Path -LiteralPath $fontFile) -and -not [string]::IsNullOrWhiteSpace($registeredPath)) {
         Write-Log "Font exists: $($Font.name)" "INFO"
         return $true
@@ -171,7 +174,8 @@ function Invoke-NerdFontSetup {
             if ($font.role -eq "terminal") {
                 Set-StateValue -Key "selectedNerdFontMonoFace" -Value $font.monoFace
             }
-        } else {
+        }
+        else {
             $allSucceeded = $false
         }
     }

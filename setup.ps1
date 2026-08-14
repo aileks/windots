@@ -12,14 +12,14 @@ $script:RootDir = $PSScriptRoot
 $script:SetupScript = $PSCommandPath
 
 foreach ($file in @(
-    "lib/State.ps1",
-    "lib/Logger.ps1",
-    "lib/Link.ps1",
-    "lib/Registry.ps1",
-    "lib/Prompt.ps1",
-    "lib/Reboot.ps1",
-    "lib/Result.ps1"
-)) {
+        "lib/State.ps1",
+        "lib/Logger.ps1",
+        "lib/Link.ps1",
+        "lib/Registry.ps1",
+        "lib/Prompt.ps1",
+        "lib/Reboot.ps1",
+        "lib/Result.ps1"
+    )) {
     . "$script:RootDir/$file"
 }
 
@@ -64,14 +64,15 @@ if (Test-ResumingAfterReboot) {
 }
 
 $profileFiles = @(Get-ChildItem "$script:RootDir/data", "$script:RootDir/configs", "$script:RootDir/lib", `
-    "$script:RootDir/helpers", "$script:RootDir/scripts" -File -Recurse | Sort-Object FullName)
+        "$script:RootDir/helpers", "$script:RootDir/scripts" -File -Recurse | Sort-Object FullName)
 $profileFiles += Get-Item -LiteralPath $PSCommandPath
 $profileMaterial = ($profileFiles | ForEach-Object { "{0}:{1}" -f $_.FullName, (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }) -join "|"
 $sha256 = [System.Security.Cryptography.SHA256]::Create()
 try {
     $profileBytes = [Text.Encoding]::UTF8.GetBytes($profileMaterial)
     $profileFingerprint = ([BitConverter]::ToString($sha256.ComputeHash($profileBytes))).Replace("-", "")
-} finally {
+}
+finally {
     $sha256.Dispose()
 }
 if ((Get-StateValue "profileFingerprint") -ne $profileFingerprint) {
@@ -87,14 +88,16 @@ $actions = @(
     [PSCustomObject]@{ Id = "nerd-fonts"; Name = "Nerd fonts"; Run = { Invoke-NerdFontSetup } },
     [PSCustomObject]@{ Id = "npiperelay"; Name = "Bitwarden SSH relay"; Wsl = $true; Prerequisite = { Test-BitwardenInstalled }; PrerequisiteMessage = "Bitwarden is not installed"; Run = { Install-NpipeRelay } },
     [PSCustomObject]@{ Id = "ubuntu-environment"; Name = "Ubuntu environment"; Wsl = $true; Run = {
-        $relayPath = Join-Path $env:LOCALAPPDATA "Programs\npiperelay\npiperelay.exe"
-        if (-not ((Test-BitwardenInstalled) -and (Test-Path -LiteralPath $relayPath))) { $relayPath = "" }
-        Invoke-WslBootstrap -RelayPath $relayPath
-    } },
+            $relayPath = Join-Path $env:LOCALAPPDATA "Programs\npiperelay\npiperelay.exe"
+            if (-not ((Test-BitwardenInstalled) -and (Test-Path -LiteralPath $relayPath))) { $relayPath = "" }
+            Invoke-WslBootstrap -RelayPath $relayPath
+        } 
+    },
     [PSCustomObject]@{ Id = "pre-tweaks-safety"; Name = "Pre-tweaks backup and restore point"; Run = {
-        Initialize-PreTweaksSafety -BackupRoot "$stateDir\registry-backups" `
-            -ProfileFingerprint $profileFingerprint
-    } },
+            Initialize-PreTweaksSafety -BackupRoot "$stateDir\registry-backups" `
+                -ProfileFingerprint $profileFingerprint
+        } 
+    },
     [PSCustomObject]@{ Id = "developer-tweaks"; Name = "Developer settings"; RequiresSafety = $true; Run = { Invoke-DeveloperTweaks } },
     [PSCustomObject]@{ Id = "explorer-tweaks"; Name = "Explorer and taskbar tweaks"; RequiresSafety = $true; Run = { Invoke-ExplorerTweaks } },
     [PSCustomObject]@{ Id = "privacy-tweaks"; Name = "Privacy and telemetry policies"; RequiresSafety = $true; Run = { Invoke-PrivacyTweaks } },
@@ -104,8 +107,9 @@ $actions = @(
     [PSCustomObject]@{ Id = "bitwarden-ssh"; Name = "Windows SSH agent handoff"; RequiresSafety = $true; Prerequisite = { Test-BitwardenInstalled }; PrerequisiteMessage = "Bitwarden is not installed; Windows ssh-agent was unchanged"; Run = { Disable-WindowsOpenSshAgent } },
     [PSCustomObject]@{ Id = "komorebi"; Name = "Komorebi configuration"; RequiresSafety = $true; Run = { Invoke-KomorebiSetup } },
     [PSCustomObject]@{ Id = "windows-terminal"; Name = "Windows Terminal"; Run = {
-        Invoke-WindowsTerminalSetup -ConfigureWslProfile:$setupWsl
-    } },
+            Invoke-WindowsTerminalSetup -ConfigureWslProfile:$setupWsl
+        } 
+    },
     [PSCustomObject]@{ Id = "powershell-profile"; Name = "PowerShell profile"; Run = { Invoke-PowerShellProfileSetup } }
 )
 
@@ -155,14 +159,16 @@ for ($i = 0; $i -lt $actions.Count; $i++) {
             if ($action.Id -eq "pre-tweaks-safety") { $safetyReady = $true }
             if ($action.Id -eq "explorer-tweaks") { $explorerChanged = $true }
             Write-Log "Done: $($action.Name)" "SUCCESS"
-        } else {
+        }
+        else {
             $result.Status = "Failed"
             $result.ExitCode = 1
             $failedPackages = @($result.PackageResults | Where-Object { $_.Status -eq "Failed" } | ForEach-Object { $_.Name })
             $result.Message = if ($failedPackages.Count) { "failed packages: $($failedPackages -join ', ')" } else { "see setup log" }
             Write-Log "Failed: $($action.Name) - $($result.Message)" "ERROR"
         }
-    } catch {
+    }
+    catch {
         $result.Status = "Failed"
         $result.ExitCode = 1
         $result.Message = $_.Exception.Message
@@ -204,3 +210,4 @@ if ((Get-StateValue "rebootRequired") -eq $true) {
     if (Ask-YesNo "A reboot is required. Reboot now?" $true) { Restart-Computer }
     else { Write-Log "Reboot skipped" "WARN" }
 }
+

@@ -19,7 +19,8 @@ function New-ConfigLink {
             $backup = "$Dest.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
             Move-Item -LiteralPath $Dest -Destination $backup -Force
             Write-Log "Backup created: $Dest" "INFO"
-        } else {
+        }
+        else {
             Remove-Item -LiteralPath $Dest -Force
         }
     }

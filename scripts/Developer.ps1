@@ -1,7 +1,7 @@
 function Invoke-DeveloperTweaks {
     Write-Log "Configuring developer settings" "INFO"
     $registryOk = Set-RegistryBatch @{
-        "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" = @{
+        "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem"              = @{
             "LongPathsEnabled" = @{ Value = 1 }
         }
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" = @{
@@ -20,7 +20,8 @@ function Invoke-DeveloperTweaks {
         $sudoResult = Invoke-NativeCommand -FilePath "sudo" -ArgumentList @("config", "--enable", "normal")
         $sudoOk = $sudoResult.ExitCode -eq 0
         if (-not $sudoOk) { Write-Log "Sudo for Windows setup failed" "ERROR" }
-    } else {
+    }
+    else {
         Write-Log "Sudo unavailable" "ERROR"
         $sudoOk = $false
     }

@@ -6,7 +6,8 @@ function Get-ProvisionedPackageNames {
         $ErrorActionPreference = "Continue"
         $output = @(& "$env:SystemRoot\System32\dism.exe" /Online /Get-ProvisionedAppxPackages /English 2>&1)
         $exitCode = $LASTEXITCODE
-    } finally {
+    }
+    finally {
         $ErrorActionPreference = $previousErrorActionPreference
     }
     if ($exitCode -ne 0) {
@@ -18,7 +19,8 @@ function Get-ProvisionedPackageNames {
         $text = [string]$line
         if ($text -match '^DisplayName\s*:\s*(.+)$') {
             $displayName = $matches[1].Trim()
-        } elseif ($text -match '^PackageName\s*:\s*(.+)$' -and $displayName -eq $PackageId) {
+        }
+        elseif ($text -match '^PackageName\s*:\s*(.+)$' -and $displayName -eq $PackageId) {
             $matches[1].Trim()
         }
     }
@@ -30,7 +32,8 @@ function Remove-InboxPackage {
 
     try {
         $installed = @(Get-AppxPackage -AllUsers -Name $PackageId -ErrorAction Stop)
-    } catch {
+    }
+    catch {
         Write-Log "App check failed: $PackageId - $($_.Exception.Message)" "WARN"
         return $false
     }
@@ -39,7 +42,8 @@ function Remove-InboxPackage {
     $ok = $true
     try {
         $provisioned = @(Get-ProvisionedPackageNames -PackageId $PackageId)
-    } catch {
+    }
+    catch {
         Write-Log "Provision check failed: $PackageId - $($_.Exception.Message)" "WARN"
         $provisioned = @()
         $ok = $false
@@ -48,7 +52,8 @@ function Remove-InboxPackage {
         try {
             Remove-AppxPackage -Package $package.PackageFullName -AllUsers -ErrorAction Stop
             Write-Log "App removed: $($package.Name)" "INFO"
-        } catch {
+        }
+        catch {
             Write-Log "App removal failed: $($package.Name) - $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -60,7 +65,8 @@ function Remove-InboxPackage {
             ) -NoConsole
             if (-not $result.Succeeded) { throw "DISM exited with $($result.ExitCode)" }
             Write-Log "Provision removed: $PackageId" "INFO"
-        } catch {
+        }
+        catch {
             Write-Log "Provision removal failed: $PackageId - $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -76,7 +82,8 @@ function Remove-OneDrivePath {
         Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction Stop
         Write-Log "Deleted: $Path" "INFO"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "OneDrive path locked: $Path - $($_.Exception.Message)" "WARN"
         return $false
     }
@@ -84,7 +91,7 @@ function Remove-OneDrivePath {
 
 function Remove-OneDriveCompletely {
     Write-Log "Removing OneDrive" "INFO"
-    Stop-Process -Name OneDrive,FileCoAuth -Force -ErrorAction SilentlyContinue
+    Stop-Process -Name OneDrive, FileCoAuth -Force -ErrorAction SilentlyContinue
     $setup = @(
         "$env:SystemRoot\System32\OneDriveSetup.exe",
         "$env:SystemRoot\SysWOW64\OneDriveSetup.exe"
@@ -112,7 +119,8 @@ function Remove-OneDriveCompletely {
                 $explorer | Wait-Process -ErrorAction SilentlyContinue
                 Write-Log "Explorer stopped for OneDrive cleanup" "INFO"
                 $failedPaths = @($failedPaths | Where-Object { -not (Remove-OneDrivePath -Path $_) })
-            } finally {
+            }
+            finally {
                 if (-not (Get-Process -Name explorer -ErrorAction SilentlyContinue)) {
                     Start-Process -FilePath "$env:SystemRoot\explorer.exe"
                     Write-Log "Explorer restarted" "INFO"
@@ -133,7 +141,8 @@ function Disable-WindowsAiComponents {
     $ok = $true
     try {
         $corePackages = @(Get-AppxPackage -AllUsers -Name "MicrosoftWindows.Client.CoreAI" -ErrorAction Stop)
-    } catch {
+    }
+    catch {
         Write-Log "CoreAI check failed: $($_.Exception.Message)" "WARN"
         return $false
     }
@@ -141,7 +150,8 @@ function Disable-WindowsAiComponents {
     if ($corePackages.Count -gt 0) {
         try {
             $provisioned = @(Get-ProvisionedPackageNames -PackageId "MicrosoftWindows.Client.CoreAI")
-        } catch {
+        }
+        catch {
             Write-Log "CoreAI provision check failed: $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -152,7 +162,8 @@ function Disable-WindowsAiComponents {
             $eol = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\EndOfLife\$sid\$($package.PackageFullName)"
             New-Item -Path $eol -Force | Out-Null
             Remove-AppxPackage -Package $package.PackageFullName -AllUsers -ErrorAction Stop
-        } catch {
+        }
+        catch {
             Write-Log "CoreAI removal failed: $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -163,7 +174,8 @@ function Disable-WindowsAiComponents {
                 "/Online", "/Remove-ProvisionedAppxPackage", "/PackageName:$packageName", "/NoRestart", "/English"
             ) -NoConsole
             if (-not $result.Succeeded) { throw "DISM exited with $($result.ExitCode)" }
-        } catch {
+        }
+        catch {
             Write-Log "CoreAI provision failed: $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -210,7 +222,8 @@ function Invoke-WindowsDebloat {
     }
     try {
         if (-not (Remove-OneDriveCompletely)) { $ok = $false }
-    } catch {
+    }
+    catch {
         Write-Log "OneDrive removal failed: $($_.Exception.Message)" "WARN"
         $ok = $false
     }

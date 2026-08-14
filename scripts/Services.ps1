@@ -12,7 +12,8 @@ function Invoke-ServiceTweaks {
     $originalMap = @{}
     if ($original -is [hashtable]) {
         foreach ($key in $original.Keys) { $originalMap[$key] = $original[$key] }
-    } elseif ($null -ne $original) {
+    }
+    elseif ($null -ne $original) {
         $original.PSObject.Properties | ForEach-Object { $originalMap[$_.Name] = $_.Value }
     }
 
@@ -30,7 +31,8 @@ function Invoke-ServiceTweaks {
             }
             Set-Service -Name $name -StartupType $targets[$name] -ErrorAction Stop
             Write-Log "Service configured: $name" "INFO"
-        } catch {
+        }
+        catch {
             Write-Log "Service failed: $name - $($_.Exception.Message)" "WARN"
             $ok = $false
         }
@@ -40,8 +42,9 @@ function Invoke-ServiceTweaks {
     try {
         $memoryKb = [uint64]((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum / 1KB)
         if (-not (Set-RegistrySafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control" `
-            -Name "SvcHostSplitThresholdInKB" -Value $memoryKb -Type QWord -PassThru)) { $ok = $false }
-    } catch {
+                    -Name "SvcHostSplitThresholdInKB" -Value $memoryKb -Type QWord -PassThru)) { $ok = $false }
+    }
+    catch {
         Write-Log "Service threshold failed: $($_.Exception.Message)" "WARN"
         $ok = $false
     }

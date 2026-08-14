@@ -54,11 +54,12 @@ try {
     }
 
     $sourceIsRepository = (Test-Path -LiteralPath $sourcePath -PathType Container) -and
-        (Test-Path -LiteralPath (Join-Path $sourcePath ".git"))
+    (Test-Path -LiteralPath (Join-Path $sourcePath ".git"))
     if ($sourceIsRepository) {
         Write-Host "Using existing setup repository" -ForegroundColor Cyan
         Test-SetupSource -Path $sourcePath
-    } else {
+    }
+    else {
         Write-Host "Cloning setup" -ForegroundColor Cyan
         & git clone --depth 1 --branch main --single-branch $repositoryUrl $stagingPath
         if ($LASTEXITCODE -ne 0) {
@@ -73,7 +74,8 @@ try {
 
         try {
             Move-Item -LiteralPath $stagingPath -Destination $sourcePath
-        } catch {
+        }
+        catch {
             if ($backupPath -and -not (Test-Path -LiteralPath $sourcePath) -and (Test-Path -LiteralPath $backupPath)) {
                 Move-Item -LiteralPath $backupPath -Destination $sourcePath
             }
@@ -87,8 +89,10 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "setup.ps1 exited with code $LASTEXITCODE"
     }
-} finally {
+}
+finally {
     if (Test-Path -LiteralPath $stagingPath) {
         Remove-Item -LiteralPath $stagingPath -Recurse -Force
     }
 }
+

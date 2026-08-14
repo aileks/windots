@@ -10,7 +10,7 @@ function Initialize-Log {
 function Write-Log {
     param(
         [Parameter(Mandatory)][AllowEmptyString()][string]$Message,
-        [ValidateSet("INFO","WARN","ERROR","SUCCESS")]
+        [ValidateSet("INFO", "WARN", "ERROR", "SUCCESS")]
         [string]$Level = "INFO",
         [switch]$NoConsole
     )
@@ -23,9 +23,9 @@ function Write-Log {
     }
 
     $color = switch ($Level) {
-        "INFO"    { "Cyan" }
-        "WARN"    { "Yellow" }
-        "ERROR"   { "Red" }
+        "INFO" { "Cyan" }
+        "WARN" { "Yellow" }
+        "ERROR" { "Red" }
         "SUCCESS" { "Green" }
     }
     if (-not $NoConsole) {
@@ -76,7 +76,8 @@ function Invoke-NativeCommand {
         & $FilePath @ArgumentList 2>&1 | ForEach-Object {
             $text = if ($_ -is [System.Management.Automation.ErrorRecord]) {
                 $_.Exception.Message
-            } else {
+            }
+            else {
                 [string]$_
             }
 
@@ -91,7 +92,8 @@ function Invoke-NativeCommand {
         }
         $exitCode = $LASTEXITCODE
         if ($null -eq $exitCode) { $exitCode = 0 }
-    } catch {
+    }
+    catch {
         $clean = Remove-NativeOutputFormatting -Text $_.Exception.Message
         $output.Add($clean)
         if (-not $NoConsole) {
@@ -99,7 +101,8 @@ function Invoke-NativeCommand {
         }
         Write-Log -Message "$OutputPrefix$clean" -Level "ERROR" -NoConsole
         $exitCode = 1
-    } finally {
+    }
+    finally {
         $ErrorActionPreference = $previousErrorActionPreference
         if ($hadNativePreference) {
             Set-Variable -Name PSNativeCommandUseErrorActionPreference -Value $previousNativePreference -Scope Local

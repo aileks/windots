@@ -132,12 +132,14 @@ function Export-RegistryKey {
                 Write-Log "Registry export failed: $nativePath - exit $($nativeResult.ExitCode)" "ERROR"
                 return $false
             }
-        } else {
+        }
+        else {
             $content = Get-MissingRegistryKeyFileContent $Path
             [System.IO.File]::WriteAllText($destination, $content, [System.Text.Encoding]::Unicode)
         }
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Registry export failed: $Path - $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -159,7 +161,8 @@ function New-RegistryBackup {
         if (Export-RegistryKey -Path $path -BackupDirectory $backupDirectory) {
             $exported++
             $script:RegistryBackedUpPaths[$path] = $true
-        } else {
+        }
+        else {
             $succeeded = $false
         }
     }
@@ -180,7 +183,7 @@ function Set-RegistrySafe {
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$Name,
         [Parameter(Mandatory)]$Value,
-        [ValidateSet("DWord","String","ExpandString","QWord")]
+        [ValidateSet("DWord", "String", "ExpandString", "QWord")]
         [string]$Type = "DWord",
         [switch]$PassThru
     )
@@ -196,10 +199,10 @@ function Set-RegistrySafe {
 
         $propertyName = if ($Name -eq "(Default)") { "" } else { $Name }
         $kind = switch ($Type) {
-            "DWord"        { [Microsoft.Win32.RegistryValueKind]::DWord }
-            "String"       { [Microsoft.Win32.RegistryValueKind]::String }
+            "DWord" { [Microsoft.Win32.RegistryValueKind]::DWord }
+            "String" { [Microsoft.Win32.RegistryValueKind]::String }
             "ExpandString" { [Microsoft.Win32.RegistryValueKind]::ExpandString }
-            "QWord"        { [Microsoft.Win32.RegistryValueKind]::QWord }
+            "QWord" { [Microsoft.Win32.RegistryValueKind]::QWord }
         }
 
         $root = $null
@@ -207,10 +210,12 @@ function Set-RegistrySafe {
         if ($Path -match "^HKLM:\\(.+)$") {
             $root = [Microsoft.Win32.Registry]::LocalMachine
             $subKey = $Matches[1]
-        } elseif ($Path -match "^HKCU:\\(.+)$") {
+        }
+        elseif ($Path -match "^HKCU:\\(.+)$") {
             $root = [Microsoft.Win32.Registry]::CurrentUser
             $subKey = $Matches[1]
-        } else {
+        }
+        else {
             throw "Unsupported registry hive in path: $Path"
         }
 
@@ -222,10 +227,12 @@ function Set-RegistrySafe {
                 $key.SetValue($propertyName, $Value, $kind)
             }
             $success = $true
-        } finally {
+        }
+        finally {
             if ($key) { $key.Dispose() }
         }
-    } catch {
+    }
+    catch {
         Write-Log "Registry failed: ${Path}\${Name} - $($_.Exception.Message)" "WARN"
     }
 
@@ -247,7 +254,8 @@ function Set-RegistryBatch {
             $type = if ($entry.ContainsKey("Type")) { $entry.Type } else { "DWord" }
             if (Set-RegistrySafe -Path $path -Name $name -Value $value -Type $type -PassThru) {
                 $count++
-            } else {
+            }
+            else {
                 $failed++
             }
         }

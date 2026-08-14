@@ -37,7 +37,8 @@ function Test-SoftwareInstalled {
     if ($Detector) {
         try {
             if (& $Detector) { return $true }
-        } catch {
+        }
+        catch {
             Write-Log "Detection failed: $($_.Exception.Message)" "WARN"
         }
     }
@@ -53,7 +54,8 @@ function Ensure-WinGet {
         $sourceResult = Invoke-NativeCommand -FilePath "winget" -ArgumentList @("source", "update") -NoConsole
         if ($sourceResult.ExitCode -eq 0) { return $true }
         Write-Log "Repairing WinGet" "INFO"
-    } else {
+    }
+    else {
         Write-Log "Installing WinGet" "INFO"
     }
 
@@ -65,11 +67,13 @@ function Ensure-WinGet {
             Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction Stop
             Install-Module -Name Microsoft.WinGet.Client -Force -AllowClobber
             Repair-WinGetPackageManager -AllUsers | Out-Null
-        } finally {
+        }
+        finally {
             Set-PSRepository -Name PSGallery -InstallationPolicy $originalPolicy -ErrorAction SilentlyContinue
         }
         Refresh-EnvironmentPath
-    } catch {
+    }
+    catch {
         Write-Log "WinGet failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -121,9 +125,9 @@ function Test-BitwardenInstalled {
 
     $userRegistered = $false
     foreach ($uninstallRoot in @(
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
-        "HKCU:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
-    )) {
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+            "HKCU:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        )) {
         $registration = Get-ItemProperty -Path $uninstallRoot -ErrorAction SilentlyContinue |
             Where-Object { $_.DisplayName -like "Bitwarden*" } |
             Select-Object -First 1
@@ -183,7 +187,8 @@ function Install-WinGetPackage {
 
     $alreadyInstalled = if ($isBitwarden) {
         Test-BitwardenInstalled
-    } else {
+    }
+    else {
         Test-WinGetPackageInstalled -PackageId $PackageId -Source $Source
     }
     Write-Log "Checking package: $Name" "INFO"
@@ -252,7 +257,8 @@ function Install-WinGetPackage {
 
         $verified = if ($isBitwarden) {
             Test-BitwardenInstalled
-        } else {
+        }
+        else {
             Test-WinGetPackageInstalled -PackageId $candidate.Id -Source $candidate.Source
         }
         if ($verified) {
@@ -279,12 +285,12 @@ function Install-WinGetPackage {
 
 function Test-FastmailInstalled {
     foreach ($root in @(
-        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
-        "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*",
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
-    )) {
+            "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+            "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*",
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        )) {
         if (Get-ItemProperty -Path $root -ErrorAction SilentlyContinue |
-            Where-Object { $_.DisplayName -like "Fastmail*" } | Select-Object -First 1) {
+                Where-Object { $_.DisplayName -like "Fastmail*" } | Select-Object -First 1) {
             return $true
         }
     }
@@ -326,12 +332,14 @@ function Install-Fastmail {
         $result.Verified = $true
         $result.Verification = "signature and installation registration verified"
         Write-Log "Fastmail installed" "SUCCESS"
-    } catch {
+    }
+    catch {
         $result.Status = "Failed"
         $result.ExitCode = if ($result.ExitCode) { $result.ExitCode } else { 1 }
         $result.Verification = $_.Exception.Message
         Write-Log "Fastmail failed: $($_.Exception.Message)" "ERROR"
-    } finally {
+    }
+    finally {
         if (Test-Path -LiteralPath $tempDir) { Remove-Item -LiteralPath $tempDir -Recurse -Force }
     }
     return $result
@@ -349,7 +357,8 @@ function Invoke-SoftwareInstall {
                 -Scope $item.scope -FallbackId $item.fallbackId -FallbackSource $item.fallbackSource -PassThru
             $packageResults.Add($result)
         }
-    } else {
+    }
+    else {
         foreach ($item in $selected) {
             $failedResult = New-SoftwarePackageResult -PackageId $item.id -Name $item.name
             $failedResult.Status = "Failed"

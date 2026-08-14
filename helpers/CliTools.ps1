@@ -16,7 +16,7 @@ function Initialize-WindowsCliToolConfigs {
 
     $batConfigResult = Invoke-NativeCommand -FilePath $bat.Source -ArgumentList @("--config-dir") -NoConsole
     $batConfigDir = (@($batConfigResult.Output) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
-        Select-Object -Last 1).Trim()
+            Select-Object -Last 1).Trim()
     if ($batConfigResult.ExitCode -ne 0 -or [string]::IsNullOrWhiteSpace($batConfigDir)) {
         Write-Log "bat config directory unavailable" "ERROR"
         return $false

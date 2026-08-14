@@ -6,7 +6,8 @@ function Test-WslPlatformEnabled {
     try {
         $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--list", "--quiet")
         return $result.ExitCode -eq 0
-    } catch {
+    }
+    catch {
         Write-Log "WSL failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -197,7 +198,8 @@ function Copy-WslConfigPayload {
             }
             if ((Get-Item -LiteralPath $source).PSIsContainer) {
                 Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force
-            } else {
+            }
+            else {
                 Copy-Item -LiteralPath $source -Destination $destination -Force
             }
         }
@@ -210,10 +212,12 @@ function Copy-WslConfigPayload {
         $linuxRoot = "/home/$LinuxUser/.local/share/windows-setup-script-configs"
         Write-Log "WSL configs copied" "SUCCESS"
         return [PSCustomObject]@{ UncPath = $managedRoot; LinuxPath = $linuxRoot }
-    } catch {
+    }
+    catch {
         Write-Log "WSL config copy failed: $($_.Exception.Message)" "ERROR"
         return $null
-    } finally {
+    }
+    finally {
         if (Test-Path -LiteralPath $stagingRoot) {
             Remove-Item -LiteralPath $stagingRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
@@ -248,10 +252,12 @@ function Install-NpipeRelay {
         Copy-Item -LiteralPath $downloadPath -Destination $executable -Force
         Write-Log "npiperelay installed" "SUCCESS"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "npiperelay failed: $($_.Exception.Message)" "ERROR"
         return $false
-    } finally {
+    }
+    finally {
         if (Test-Path -LiteralPath $tempDir) {
             Remove-Item -LiteralPath $tempDir -Recurse -Force
         }
@@ -278,7 +284,8 @@ function Start-WslDotfilesSetup {
         Start-Process -FilePath $terminal.Path -ArgumentList $arguments | Out-Null
         Write-Log "Ubuntu dotfiles setup launched in Windows Terminal" "SUCCESS"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Ubuntu dotfiles setup launch failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -318,7 +325,8 @@ function Invoke-WslBootstrap {
                 Write-Log "npiperelay path failed" "ERROR"
                 return $false
             }
-        } else {
+        }
+        else {
             Write-Log "Bitwarden relay unavailable" "WARN"
         }
 
@@ -343,7 +351,8 @@ function Invoke-WslBootstrap {
         }
 
         $dotfilesSetupPath = "$configRoot/wsl/dotfiles-setup.sh"
-    } finally {
+    }
+    finally {
         $shutdownResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--shutdown")
         if ($shutdownResult.ExitCode -ne 0) {
             Write-Log "WSL shutdown failed: exit $($shutdownResult.ExitCode)" "WARN"
@@ -361,7 +370,8 @@ function Disable-WindowsOpenSshAgent {
         Set-Service -Name "ssh-agent" -StartupType Disabled
         Write-Log "OpenSSH agent disabled" "SUCCESS"
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "OpenSSH agent failed: $($_.Exception.Message)" "ERROR"
         return $false
     }

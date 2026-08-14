@@ -24,7 +24,8 @@ function Invoke-WindowsTerminalSetup {
         Copy-Item -LiteralPath $termSettingsPath `
             -Destination "$termSettingsPath.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
         $settings = Get-Content $termSettingsPath -Raw | ConvertFrom-Json
-    } else {
+    }
+    else {
         $settings = Get-Content "$script:RootDir/configs/windows/terminal/settings.json" -Raw | ConvertFrom-Json
     }
     $managed = Get-Content "$script:RootDir/configs/windows/terminal/settings.json" -Raw | ConvertFrom-Json
@@ -37,11 +38,11 @@ function Invoke-WindowsTerminalSetup {
     $managedShiftEnter = @($managed.actions | Where-Object { $_.id -eq $shiftEnterId }) | Select-Object -First 1
     $managedShiftEnterKey = @($managed.keybindings | Where-Object { $_.id -eq $shiftEnterId }) | Select-Object -First 1
     $actions = @($settings.actions | Where-Object {
-        $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
-    })
+            $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
+        })
     $keybindings = @($settings.keybindings | Where-Object {
-        $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
-    })
+            $_.id -ne $shiftEnterId -and $_.keys -ne "shift+enter"
+        })
     if ($managedShiftEnter -and $managedShiftEnterKey) {
         Set-ObjectProperty $settings "actions" @($actions + $managedShiftEnter)
         Set-ObjectProperty $settings "keybindings" @($keybindings + $managedShiftEnterKey)
@@ -62,7 +63,7 @@ function Invoke-WindowsTerminalSetup {
 
     if ($ConfigureWslProfile) {
         $ubuntuInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
-            (@(Get-WslDistroNames) -contains "Ubuntu")
+        (@(Get-WslDistroNames) -contains "Ubuntu")
         if ($ubuntuInstalled) {
             Set-ObjectProperty $settings "defaultProfile" "Ubuntu"
         }
@@ -70,7 +71,8 @@ function Invoke-WindowsTerminalSetup {
             $disabledSources = @($settings.disabledProfileSources | Where-Object { $_ -ne "Windows.Terminal.Wsl" })
             if ($disabledSources.Count -gt 0) {
                 Set-ObjectProperty $settings "disabledProfileSources" $disabledSources
-            } else {
+            }
+            else {
                 $settings.PSObject.Properties.Remove("disabledProfileSources")
             }
         }

@@ -12,12 +12,14 @@ function Load-State {
             $json.PSObject.Properties | ForEach-Object {
                 $script:State[$_.Name] = $_.Value
             }
-        } catch {
+        }
+        catch {
             $corruptPath = "$Path.corrupt-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
             Move-Item -LiteralPath $Path -Destination $corruptPath -Force
             $script:State = @{}
         }
-    } else {
+    }
+    else {
         $dir = Split-Path $Path -Parent
         if (-not (Test-Path $dir)) { New-Item -Path $dir -ItemType Directory -Force | Out-Null }
         $script:State = @{}
@@ -39,10 +41,12 @@ function Save-State {
         $backupPath = "$script:StateFile.replace"
         try {
             [System.IO.File]::Replace($tempPath, $script:StateFile, $backupPath)
-        } finally {
+        }
+        finally {
             if (Test-Path -LiteralPath $backupPath) { Remove-Item -LiteralPath $backupPath -Force }
         }
-    } else {
+    }
+    else {
         [System.IO.File]::Move($tempPath, $script:StateFile)
     }
 }
@@ -67,13 +71,15 @@ function Set-StateResult {
     $existing = $script:State["results"]
     if ($existing -is [hashtable]) {
         $results = $existing
-    } elseif ($null -ne $existing) {
+    }
+    elseif ($null -ne $existing) {
         $existing.PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value }
     }
 
     $packageResults = if ($Result.PSObject.Properties.Name -contains "PackageResults") {
         @($Result.PackageResults)
-    } else {
+    }
+    else {
         @()
     }
 
@@ -92,7 +98,8 @@ function Set-StateResult {
         if ($list -notcontains $Result.Id) {
             $script:State["completed"] = @($list + $Result.Id)
         }
-    } else {
+    }
+    else {
         $script:State["completed"] = @($list | Where-Object { $_ -ne $Result.Id })
     }
     Save-State
