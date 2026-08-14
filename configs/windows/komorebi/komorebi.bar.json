@@ -45,11 +45,7 @@
     { "Date": { "enable": true, "format": "MonthDateYear" } },
     { "Time": { "enable": true, "format": "TwentyFourHourWithoutSeconds" } },
     {
-      "Systray": {
-        "enable": true,
-        "info_button": "Visible",
-        "refresh_button": "Visible"
-      }
+      "Systray": { "enable": true }
     }
   ]
 }
