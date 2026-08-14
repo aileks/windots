@@ -41,7 +41,6 @@
   "right_widgets": [
     { "Cpu": { "enable": true } },
     { "Memory": { "enable": true } },
-    { "Network": { "enable": true, "show_activity": true, "show_total_activity": false } },
     { "Date": { "enable": true, "format": "MonthDateYear" } },
     { "Time": { "enable": true, "format": "TwentyFourHourWithoutSeconds" } },
     {
