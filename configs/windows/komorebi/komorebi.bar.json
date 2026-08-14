@@ -50,6 +50,6 @@
       }
     },
     { "Date": { "enable": true, "format": "DayDateMonthYear" } },
-    { "Time": { "enable": true, "format": "TwentyFourHour" } }
+    { "Time": { "enable": true, "format": "TwentyFourHourWithoutSeconds" } }
   ]
 }
