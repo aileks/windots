@@ -8,6 +8,8 @@ function Set-ObjectProperty {
 }
 
 function Invoke-WindowsTerminalSetup {
+    param([switch]$ConfigureWslProfile)
+
     Write-Log "Configuring Windows Terminal" "INFO"
     $termPkgDir = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe"
     if (-not (Test-SoftwareInstalled -Commands @("wt.exe") -Detector { Test-Path $termPkgDir })) {
@@ -58,19 +60,21 @@ function Invoke-WindowsTerminalSetup {
     if (-not $monoFontFace) { $monoFontFace = "AdwaitaMono Nerd Font Mono" }
     Set-ObjectProperty $defaults "font" ([PSCustomObject]@{ face = $monoFontFace; size = 13 })
 
-    $archInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
-        (@(Get-WslDistroNames) -contains "archlinux")
-    if ($archInstalled) {
-        # WSL generates the profile. Selecting it by distro name avoids adding
-        # a second, manually managed Arch profile.
-        Set-ObjectProperty $settings "defaultProfile" "archlinux"
-    }
-    if (@($settings.disabledProfileSources) -contains "Windows.Terminal.Wsl") {
-        $disabledSources = @($settings.disabledProfileSources | Where-Object { $_ -ne "Windows.Terminal.Wsl" })
-        if ($disabledSources.Count -gt 0) {
-            Set-ObjectProperty $settings "disabledProfileSources" $disabledSources
-        } else {
-            $settings.PSObject.Properties.Remove("disabledProfileSources")
+    if ($ConfigureWslProfile) {
+        $archInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
+            (@(Get-WslDistroNames) -contains "archlinux")
+        if ($archInstalled) {
+            # WSL generates the profile. Selecting it by distro name avoids adding
+            # a second, manually managed Arch profile.
+            Set-ObjectProperty $settings "defaultProfile" "archlinux"
+        }
+        if (@($settings.disabledProfileSources) -contains "Windows.Terminal.Wsl") {
+            $disabledSources = @($settings.disabledProfileSources | Where-Object { $_ -ne "Windows.Terminal.Wsl" })
+            if ($disabledSources.Count -gt 0) {
+                Set-ObjectProperty $settings "disabledProfileSources" $disabledSources
+            } else {
+                $settings.PSObject.Properties.Remove("disabledProfileSources")
+            }
         }
     }
 

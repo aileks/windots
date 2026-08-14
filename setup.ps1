@@ -103,7 +103,9 @@ $actions = @(
     [PSCustomObject]@{ Id = "power-plan"; Name = "Ultimate Performance power plan"; Run = { Invoke-PowerPlanTweaks } },
     [PSCustomObject]@{ Id = "bitwarden-ssh"; Name = "Windows SSH agent handoff"; RequiresSafety = $true; Prerequisite = { Test-BitwardenInstalled }; PrerequisiteMessage = "Bitwarden is not installed; Windows ssh-agent was unchanged"; Run = { Disable-WindowsOpenSshAgent } },
     [PSCustomObject]@{ Id = "komorebi"; Name = "Komorebi configuration"; RequiresSafety = $true; Run = { Invoke-KomorebiSetup } },
-    [PSCustomObject]@{ Id = "windows-terminal"; Name = "Windows Terminal"; Run = { Invoke-WindowsTerminalSetup } },
+    [PSCustomObject]@{ Id = "windows-terminal"; Name = "Windows Terminal"; Run = {
+        Invoke-WindowsTerminalSetup -ConfigureWslProfile:$setupWsl
+    } },
     [PSCustomObject]@{ Id = "powershell-profile"; Name = "PowerShell profile"; Run = { Invoke-PowerShellProfileSetup } }
 )
 
