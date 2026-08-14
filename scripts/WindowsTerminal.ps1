@@ -61,12 +61,10 @@ function Invoke-WindowsTerminalSetup {
     Set-ObjectProperty $defaults "font" ([PSCustomObject]@{ face = $monoFontFace; size = 13 })
 
     if ($ConfigureWslProfile) {
-        $archInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
-            (@(Get-WslDistroNames) -contains "archlinux")
-        if ($archInstalled) {
-            # WSL generates the profile. Selecting it by distro name avoids adding
-            # a second, manually managed Arch profile.
-            Set-ObjectProperty $settings "defaultProfile" "archlinux"
+        $ubuntuInstalled = (Get-Command Get-WslDistroNames -ErrorAction SilentlyContinue) -and
+            (@(Get-WslDistroNames) -contains "Ubuntu")
+        if ($ubuntuInstalled) {
+            Set-ObjectProperty $settings "defaultProfile" "Ubuntu"
         }
         if (@($settings.disabledProfileSources) -contains "Windows.Terminal.Wsl") {
             $disabledSources = @($settings.disabledProfileSources | Where-Object { $_ -ne "Windows.Terminal.Wsl" })

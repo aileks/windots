@@ -1,4 +1,4 @@
-$script:WslDistro = "archlinux"
+$script:WslDistro = "Ubuntu"
 $script:NpipeRelayVersion = "1.11.4"
 $script:NpipeRelaySha256 = "cea82cf5c9c22a28bef8075750acb7958f766393baebff4597cf21442f71c4b3"
 
@@ -41,20 +41,20 @@ function Test-WslDistroInstalled {
 function Install-WslDistro {
     if (Test-WslDistroInstalled) {
         Set-StateValue "selectedWslDistro" $script:WslDistro
-        Write-Log "Arch Linux exists" "INFO"
+        Write-Log "Ubuntu exists" "INFO"
         return $true
     }
 
-    Write-Log "Installing Arch Linux" "INFO"
+    Write-Log "Installing Ubuntu" "INFO"
     $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
         "--install", "--distribution", $script:WslDistro, "--no-launch"
     )
     if ($result.ExitCode -ne 0) {
-        Write-Log "Arch Linux install failed: exit $($result.ExitCode)" "ERROR"
+        Write-Log "Ubuntu install failed: exit $($result.ExitCode)" "ERROR"
         return $false
     }
     if (-not (Test-WslDistroInstalled)) {
-        Write-Log "Arch Linux unavailable after installation" "ERROR"
+        Write-Log "Ubuntu unavailable after installation" "ERROR"
         return $false
     }
     Set-StateValue "selectedWslDistro" $script:WslDistro
@@ -72,8 +72,8 @@ function Get-WslDefaultUser {
         if ($storedResult.ExitCode -eq 0) { return $storedUser }
     }
 
-    # The official Arch image starts as root. UID 1000 is the user created by
-    # this installer and lets an interrupted setup resume without prompting.
+    # UID 1000 is the user created by this installer and lets an interrupted
+    # setup resume without prompting.
     $result = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
         "--distribution", $script:WslDistro, "--user", "root", "--exec",
         "sh", "-lc", "getent passwd 1000 | cut -d: -f1"
@@ -102,11 +102,11 @@ function Test-WslUserPasswordSet {
 function Set-WslUserPassword {
     param([Parameter(Mandatory)][string]$User)
 
-    Write-Host "Set Arch Linux password for $User" -ForegroundColor Yellow
+    Write-Host "Set Ubuntu password for $User" -ForegroundColor Yellow
     & wsl.exe --distribution $script:WslDistro --user root --exec passwd $User
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne 0) {
-        Write-Log "Arch Linux password setup failed: exit $exitCode" "ERROR"
+        Write-Log "Ubuntu password setup failed: exit $exitCode" "ERROR"
         return $false
     }
     return Test-WslUserPasswordSet -User $User
@@ -120,7 +120,7 @@ function Initialize-WslUser {
         if ($defaultUser.Length -gt 32) { $defaultUser = $defaultUser.Substring(0, 32) }
 
         while ($true) {
-            $user = Ask-Input "Arch Linux username" $defaultUser
+            $user = Ask-Input "Ubuntu username" $defaultUser
             if ($user -match '^[a-z_][a-z0-9_-]{0,31}$' -and $user -ne "root") { break }
             Write-Host "Use 1-32 lowercase letters, numbers, underscores, or hyphens; do not use root." `
                 -ForegroundColor Yellow
@@ -128,10 +128,10 @@ function Initialize-WslUser {
 
         $createResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @(
             "--distribution", $script:WslDistro, "--user", "root", "--exec",
-            "useradd", "--create-home", "--groups", "wheel", "--shell", "/bin/bash", $user
+            "useradd", "--create-home", "--groups", "sudo", "--shell", "/bin/bash", $user
         )
         if ($createResult.ExitCode -ne 0) {
-            Write-Log "Arch Linux user creation failed: exit $($createResult.ExitCode)" "ERROR"
+            Write-Log "Ubuntu user creation failed: exit $($createResult.ExitCode)" "ERROR"
             return ""
         }
     }
@@ -171,23 +171,17 @@ function Copy-WslConfigPayload {
 
     $uncHome = "\\wsl.localhost\$script:WslDistro\home\$LinuxUser"
     if (-not (Test-Path -LiteralPath $uncHome)) {
-        Write-Log "Arch Linux home unavailable: $uncHome" "ERROR"
+        Write-Log "Ubuntu home unavailable: $uncHome" "ERROR"
         return $null
     }
 
     $managedRoot = Join-Path $uncHome ".local\share\windows-setup-script-configs"
     $stagingRoot = "$managedRoot.stage-$([guid]::NewGuid())"
     $payloadFiles = @(
-        @{ Source = "configs\wsl\bootstrap.sh"; Relative = "wsl\bootstrap.sh" }
-        @{ Source = "configs\wsl\zsh"; Relative = "zsh" }
+        @{ Source = "scripts\wsl\bootstrap.sh"; Relative = "wsl\bootstrap.sh" }
+        @{ Source = "scripts\wsl\dotfiles-setup.sh"; Relative = "wsl\dotfiles-setup.sh" }
         @{ Source = "configs\wsl\wsl.conf"; Relative = "wsl\wsl.conf" }
         @{ Source = "configs\wsl\bitwarden-ssh-agent.zsh"; Relative = "wsl\bitwarden-ssh-agent.zsh" }
-        @{ Source = "configs\wsl\nvim"; Relative = "nvim" }
-        @{ Source = "configs\wsl\tmux"; Relative = "tmux" }
-        @{ Source = "configs\wsl\btop"; Relative = "btop" }
-        @{ Source = "configs\wsl\fastfetch"; Relative = "fastfetch" }
-        @{ Source = "configs\common\starship\starship.toml"; Relative = "starship\starship.toml" }
-        @{ Source = "configs\common\bat"; Relative = "bat" }
     )
 
     try {
@@ -264,15 +258,38 @@ function Install-NpipeRelay {
     }
 }
 
+function Start-WslDotfilesSetup {
+    param(
+        [Parameter(Mandatory)][string]$LinuxUser,
+        [Parameter(Mandatory)][string]$ScriptPath
+    )
+
+    $terminal = Get-Command "wt.exe" -ErrorAction SilentlyContinue
+    if (-not $terminal) {
+        Write-Log "Windows Terminal unavailable for Ubuntu dotfiles setup" "ERROR"
+        return $false
+    }
+
+    try {
+        $arguments = @(
+            "-w", "new", "new-tab", "wsl.exe", "--distribution", $script:WslDistro,
+            "--user", $LinuxUser, "--exec", "bash", $ScriptPath
+        )
+        Start-Process -FilePath $terminal.Path -ArgumentList $arguments | Out-Null
+        Write-Log "Ubuntu dotfiles setup launched in Windows Terminal" "SUCCESS"
+        return $true
+    } catch {
+        Write-Log "Ubuntu dotfiles setup launch failed: $($_.Exception.Message)" "ERROR"
+        return $false
+    }
+}
+
 function Invoke-WslBootstrap {
     param([AllowNull()][string]$RelayPath = $null)
 
     New-ConfigLink "$script:RootDir/configs/wsl/.wslconfig" "$env:USERPROFILE\.wslconfig"
     if (-not (Install-WslDistro)) { return $false }
 
-    # Applying .wslconfig requires all WSL instances to stop before Arch Linux is
-    # relaunched. A non-zero shutdown here is reported but does not prevent the
-    # first-run experience from repairing an otherwise healthy installation.
     $initialShutdown = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--shutdown")
     if ($initialShutdown.ExitCode -ne 0) {
         Write-Log "WSL shutdown failed: exit $($initialShutdown.ExitCode)" "WARN"
@@ -305,7 +322,7 @@ function Invoke-WslBootstrap {
             Write-Log "Bitwarden relay unavailable" "WARN"
         }
 
-        Write-Log "Configuring Arch Linux" "INFO"
+        Write-Log "Configuring Ubuntu integration" "INFO"
         $bootstrapPath = "$configRoot/wsl/bootstrap.sh"
         $bootstrapArguments = @(
             "--distribution", $script:WslDistro, "--user", "root", "--exec",
@@ -313,7 +330,7 @@ function Invoke-WslBootstrap {
         )
         $bootstrapResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList $bootstrapArguments
         if ($bootstrapResult.ExitCode -ne 0) {
-            Write-Log "Arch Linux setup failed: exit $($bootstrapResult.ExitCode)" "ERROR"
+            Write-Log "Ubuntu integration failed: exit $($bootstrapResult.ExitCode)" "ERROR"
             return $false
         }
 
@@ -321,18 +338,19 @@ function Invoke-WslBootstrap {
             "--set-default", $script:WslDistro
         )
         if ($defaultResult.ExitCode -ne 0) {
-            Write-Log "Arch Linux default distro setup failed: exit $($defaultResult.ExitCode)" "ERROR"
+            Write-Log "Ubuntu default distro setup failed: exit $($defaultResult.ExitCode)" "ERROR"
             return $false
         }
 
-        Write-Log "Arch Linux configured" "SUCCESS"
-        return $true
+        $dotfilesSetupPath = "$configRoot/wsl/dotfiles-setup.sh"
     } finally {
         $shutdownResult = Invoke-NativeCommand -FilePath "wsl.exe" -ArgumentList @("--shutdown")
         if ($shutdownResult.ExitCode -ne 0) {
             Write-Log "WSL shutdown failed: exit $($shutdownResult.ExitCode)" "WARN"
         }
     }
+
+    Start-WslDotfilesSetup -LinuxUser $linuxUser -ScriptPath $dotfilesSetupPath
 }
 
 function Disable-WindowsOpenSshAgent {

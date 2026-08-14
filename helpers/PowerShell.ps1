@@ -31,7 +31,7 @@ try {
 
     $profilePath = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "PowerShell\Microsoft.PowerShell_profile.ps1"
     New-ConfigLink "$script:RootDir/configs/windows/powershell/Microsoft.PowerShell_profile.ps1" $profilePath
-    New-ConfigLink "$script:RootDir/configs/common/starship/starship.toml" "$env:USERPROFILE\.config\starship.toml"
+    New-ConfigLink "$script:RootDir/configs/windows/starship/starship.toml" "$env:USERPROFILE\.config\starship.toml"
     Write-Log "PowerShell profile linked" "SUCCESS"
     return $true
 }
