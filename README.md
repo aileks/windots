@@ -1,6 +1,6 @@
 # Windows 11 Setup
 
-Opinionated setup for Windows 11 24H2+. Use at your own risk.
+Opinionated setup for Windows 11 24H2 or later. Use at your own risk.
 
 ## Install
 
