@@ -42,14 +42,14 @@
     { "Cpu": { "enable": true } },
     { "Memory": { "enable": true } },
     { "Network": { "enable": true, "show_activity": true, "show_total_activity": false } },
+    { "Date": { "enable": true, "format": "MonthDateYear" } },
+    { "Time": { "enable": true, "format": "TwentyFourHourWithoutSeconds" } },
     {
       "Systray": {
         "enable": true,
         "info_button": "Visible",
         "refresh_button": "Visible"
       }
-    },
-    { "Date": { "enable": true, "format": "DayDateMonthYear" } },
-    { "Time": { "enable": true, "format": "TwentyFourHourWithoutSeconds" } }
+    }
   ]
 }
