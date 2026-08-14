@@ -13,7 +13,7 @@ irm https://aileks.dev/win | iex
 Or clone and run it manually:
 
 ```powershell
-git clone https://codeberg.org/aileks/windots.git "$env:USERPROFILE\.dotfiles"
+git clone https://github.com/aileks/windots.git "$env:USERPROFILE\.dotfiles"
 Set-Location "$env:USERPROFILE\.dotfiles"
 Set-ExecutionPolicy Bypass -Scope Process
 .\setup.ps1

@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor `
     [Net.SecurityProtocolType]::Tls12
 
-$repositoryUrl = "https://codeberg.org/aileks/windots.git"
+$repositoryUrl = "https://github.com/aileks/windots.git"
 $stateRoot = Join-Path $env:USERPROFILE ".dotfiles-state"
 $sourcePath = Join-Path $env:USERPROFILE ".dotfiles"
 $stagingPath = Join-Path $stateRoot ".source-new-$([guid]::NewGuid())"
