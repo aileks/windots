@@ -45,7 +45,6 @@ win + ctrl + k : komorebic resize-axis vertical decrease
 win + shift + space : komorebic toggle-float
 win + f : komorebic toggle-monocle
 win + shift + r : komorebic retile
-win + oem_2 : komorebic toggle-pause
 
 win + x : komorebic flip-layout horizontal
 win + y : komorebic flip-layout vertical
@@ -57,7 +56,6 @@ win + 4 : komorebic focus-workspace 3
 win + 5 : komorebic focus-workspace 4
 win + 6 : komorebic focus-workspace 5
 win + 7 : komorebic focus-workspace 6
-win + 8 : komorebic focus-workspace 7
 
 win + shift + 1 : komorebic move-to-workspace 0
 win + shift + 2 : komorebic move-to-workspace 1
@@ -66,6 +64,5 @@ win + shift + 4 : komorebic move-to-workspace 3
 win + shift + 5 : komorebic move-to-workspace 4
 win + shift + 6 : komorebic move-to-workspace 5
 win + shift + 7 : komorebic move-to-workspace 6
-win + shift + 8 : komorebic move-to-workspace 7
 
 win + escape : schtasks /run /tn KomorebiLock
