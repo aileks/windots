@@ -1,4 +1,5 @@
 [wsl2]
+guiApplications=false
 networkingMode=mirrored
 dnsTunneling=true
 autoProxy=true
