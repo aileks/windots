@@ -3,6 +3,10 @@ $env:VISUAL = $env:EDITOR
 
 Set-Alias ff fastfetch
 
+function ls { eza --color=always --icons --group-directories-first @args }
+function la { eza -al --color=always --icons --group-directories-first @args }
+function lt { eza -aT --color=always --icons --group-directories-first @args }
+
 if (Get-Command coreutils-manager -ErrorAction SilentlyContinue) {
     @("cat", "cp", "echo", "ls", "mv", "pwd", "rm", "rmdir", "sleep", "sort", "tee") |
         ForEach-Object { Remove-Item "Alias:$_" -Force -ErrorAction SilentlyContinue }
